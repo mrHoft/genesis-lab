@@ -1,1 +1,97 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+  --color-scheme: 0;
+  --color00: #191716;
+  --color10: #2d2a28;
+  --color20: #403a38;
+  --color20a: #403a3888;
+  --color30: #4c4643;
+  --color40: #655e5a;
+  --color50: #7f7671;
+  --color60: #988d87;
+  --color70: #b1a59e;
+  --color80: #cbbeb4;
+  --color90: #e0d4cb;
+  --color100: #fef7f3;
+  --color-accent50: #1c5d80;
+  --color-accent50a: #1c5d8080;
+  --color-accent60: #2c7da0;
+  --color-accent60a: #2c7da080;
+  --color-accent80: #3596c0;
+  --color-accent80a: #3596c080;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --color-scheme: 1;
+    --color00: #fef7f3;
+    --color10: #e0d4cb;
+    --color20: #cbbeb4;
+    --color20a: #cbbeb488;
+    --color30: #b1a59e;
+    --color40: #988d87;
+    --color50: #7f7671;
+    --color60: #655e5a;
+    --color70: #4c4643;
+    --color80: #322f2d;
+    --color90: #191716;
+    --color100: #161311;
+  }
+}
+
+:root {
+  --font-family: system-ui, Helvetica, Arial, sans-serif;
+  font-family: var(--font-family);
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: var(--color100);
+  background-color: var(--color00);
+
+  --border-radius: 0.375rem;
+  --border-thickness: 2px;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  position: relative;
+}
+
+a {
+  text-decoration: none;
+  color: var(--color-accent80);
+  transition: color 0.25s linear;
+
+  &:hover {
+    color: var(--color-accent60);
+  }
+}
+
+input,
+select,
+button {
+  outline: none;
+}
+
+.button {
+  border: none;
+  font-size: 1rem;
+  padding: 0.25rem 1rem;
+  border-radius: var(--border-radius);
+  background-color: var(--color30);
+  transition: background-color 0.25s linear;
+
+  &:hover:not(:disabled) {
+    cursor: pointer;
+    background-color: var(--color-accent60);
+  }
+}

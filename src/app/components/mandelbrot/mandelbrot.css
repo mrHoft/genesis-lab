@@ -1,0 +1,17 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  row-gap: 1rem;
+  align-items: center;
+}
+
+.controls {
+  display: flex;
+  column-gap: 0.5rem;
+}
+
+canvas {
+  border: var(--border-thickness) solid var(--color40);
+  border-radius: var(--border-radius);
+  box-shadow: 0 0 15px rgba(109, 213, 250, 0.4);
+}

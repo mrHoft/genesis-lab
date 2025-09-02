@@ -1,0 +1,7 @@
+<canvas #canvas width="300" height="300" (click)="handleCanvasClick($event)" (wheel)="handleWheel($event)"></canvas>
+<div class="controls">
+  <button class="button" (click)="zoomIn()">Zoom In</button>
+  <button class="button" (click)="zoomOut()">Zoom Out</button>
+  <button class="button" (click)="cyclePalette()">Change Colors</button>
+  <button class="button" (click)="resetView()">Reset View</button>
+</div>
