@@ -10,6 +10,13 @@
   column-gap: 0.5rem;
 }
 
+.sliders {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  row-gap: 0.5rem;
+}
+
 canvas {
   border: var(--border-thickness) solid var(--color40);
   border-radius: var(--border-radius);
