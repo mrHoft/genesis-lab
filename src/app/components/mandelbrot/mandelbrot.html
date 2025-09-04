@@ -1,5 +1,7 @@
 <canvas #canvas width="512" height="512" (click)="handleCanvasClick($event)" (wheel)="handleWheel($event)"></canvas>
 
+<img style="background-color: grey;" width="64" height="64" (click)="handleCreateThumbnail()" [src]="thumbnail()" />
+
 <div class="controls">
   <button class="button" (click)="zoomIn()">Zoom In</button>
   <button class="button" (click)="zoomOut()">Zoom Out</button>

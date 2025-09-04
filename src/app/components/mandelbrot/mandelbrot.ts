@@ -1,5 +1,6 @@
 import { Component, effect, signal, computed, afterNextRender } from '@angular/core';
 import { palette } from '~/app/utils/palette';
+import { createThumbnail } from '~/app/utils/thumbnail';
 
 type FractalFn = (x: number, y: number, p1?: number, p2?: number) => number;
 type TFractalType = 'mandelbrot' | 'julia' | 'burningShip' | 'newton' | 'strangeAttractor' | 'lyapunov' | 'ifs' | 'plasma' | 'pickover'
@@ -267,6 +268,7 @@ export class Mandelbrot {
   readonly fractalType = signal<TFractalType>(defaultFractal);
   readonly fractionalPower = signal(2);
   readonly asymmetricalPower = signal(2);
+  protected thumbnail = signal('')
 
   readonly colorPalettes = computed(() => [
     palette.rainbow(),
@@ -295,6 +297,12 @@ export class Mandelbrot {
         this.renderFractal();
       }
     });
+  }
+
+  protected handleCreateThumbnail = () => {
+    const dataUrl = createThumbnail(this.imageData, 32, 32)
+    console.log('thumbnail length:', dataUrl.length)
+    this.thumbnail.set(dataUrl)
   }
 
   public zoomIn(): void {
