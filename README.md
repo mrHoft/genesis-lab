@@ -12,3 +12,36 @@ A beautiful and interactive visualization of the math fractals, rendered on a ca
 
 ### How It Works
 The Mandelbrot set is created by iterating the function f(z) = z² + c for complex numbers. Each point on the canvas is colored based on how quickly the iteration diverges (if at all), creating the intricate patterns characteristic of fractals.
+
+### Deno server
+✅ Serve API routes under /api/*
+
+✅ Serve static files from ../client/dist/
+
+✅ Serve index.html for all non-API routes (SPA support)
+
+✅ Handle favicon and assets properly
+
+✅ Apply appropriate caching headers
+
+✅ Support client-side routing for Angular app
+
+### File structure
+```markdown
+project/
+├── server/
+│   ├── middleware/
+│   │   ├── cors.ts
+│   │   └── static.ts
+│   ├── router/
+│   │   └── router.ts
+│   └── server.ts
+└── client/
+    └── dist/
+        ├── index.html
+        ├── favicon.ico
+        └── assets/
+            ├── js/
+            ├── css/
+            └── images/
+```
