@@ -2,8 +2,8 @@ import * as bcrypt from "https://deno.land/x/bcrypt@v0.4.1/mod.ts";
 import { CreateUserDto, UpdateUserDto, User } from "../types/user.ts";
 import { JwtUtils, type JwtPayload } from "../utils/jwt.ts";
 import { executeQuery } from "../db/client.ts";
+import { validatePassword } from "../utils/validation.ts";
 
-// Validate JWT environment variables
 const JWT_TOKEN_KEY = Deno.env.get("JWT_TOKEN_KEY");
 const JWT_REFRESH_KEY = Deno.env.get("JWT_REFRESH_KEY");
 
@@ -16,29 +16,6 @@ if (!JWT_REFRESH_KEY) {
 
 const TOKEN_EXPIRE_TIME = Deno.env.get("TOKEN_EXPIRE_TIME") || "1h";
 const REFRESH_EXPIRE_TIME = Deno.env.get("REFRESH_EXPIRE_TIME") || "7d";
-
-// Password validation
-function validatePassword(password: string): void {
-  if (password.length < 8) {
-    throw new Error("Password must be at least 8 characters long");
-  }
-
-  if (!/[A-Z]/.test(password)) {
-    throw new Error("Password must contain at least one uppercase letter");
-  }
-
-  if (!/[a-z]/.test(password)) {
-    throw new Error("Password must contain at least one lowercase letter");
-  }
-
-  if (!/[0-9]/.test(password)) {
-    throw new Error("Password must contain at least one number");
-  }
-
-  if (!/[^A-Za-z0-9]/.test(password)) {
-    throw new Error("Password must contain at least one special character");
-  }
-}
 
 export class UserService {
   findAll(): Promise<User[]> {
@@ -73,7 +50,6 @@ export class UserService {
   }
 
   async create(createUserDto: CreateUserDto): Promise<User> {
-    // Validate password if provided
     if (createUserDto.password) {
       validatePassword(createUserDto.password);
     }

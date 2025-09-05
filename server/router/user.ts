@@ -1,6 +1,8 @@
 import { UserService } from "../services/userService.ts";
 import { User, CreateUserDto, UpdateUserDto } from "../types/user.ts";
 
+const DEV = Deno.env.get("DEV_MODE")
+
 export class UserHandler {
   private userService: UserService
 
@@ -64,7 +66,7 @@ export class UserHandler {
   }
 
   private async findAll(): Promise<Response> {
-    if (Deno.env.get("ENV") === "production") {
+    if (!DEV) {
       return new Response(JSON.stringify({ error: "Access Denied" }), {
         status: 403,
         headers: { "Content-Type": "application/json" },
@@ -83,10 +85,12 @@ export class UserHandler {
     if (!authHeader) {
       // Create anonymous user
       const user = await this.userService.create({});
-      const tokens = this.userService.generateTokens(user);
+      const tokens = await this.userService.generateTokens(user);
       const { password: _, ...userWithoutPassword } = user;
+      const body = JSON.stringify({ ...userWithoutPassword, ...tokens })
+      console.log('tokens', tokens)
 
-      return new Response(JSON.stringify({ ...userWithoutPassword, ...tokens }), {
+      return new Response(body, {
         headers: { "Content-Type": "application/json" },
       });
     }
@@ -145,7 +149,7 @@ export class UserHandler {
   }
 
   private async remove(id: string): Promise<Response> {
-    if (Deno.env.get("ENV") === "production") {
+    if (!DEV) {
       return new Response(JSON.stringify({ error: "Access Denied" }), {
         status: 403,
         headers: { "Content-Type": "application/json" },

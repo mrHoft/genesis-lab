@@ -6,7 +6,7 @@ const userHandler = new UserHandler();
 export async function handleRequest(request: Request) {
   const url = new URL(request.url);
   const { pathname } = url;
-  const pathSegments = pathname.split('/').filter(Boolean); // ["user", "all"] or ["user", "123"]
+  const pathSegments = pathname.split('/').filter(Boolean);
 
   if (pathSegments[0] === "health") {
     return handleHealth();
@@ -16,8 +16,8 @@ export async function handleRequest(request: Request) {
     return await userHandler.handleRequest(request, pathSegments);
   }
 
-  return new Response(JSON.stringify({ message: "Hello from Deno Server!" }), {
-    status: 200,
+  return new Response(JSON.stringify({ error: "Not found" }), {
+    status: 404,
     headers: { "Content-Type": "application/json" },
   });
 }
