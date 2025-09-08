@@ -31,16 +31,12 @@ export class Menu implements OnInit, OnDestroy {
     this.menuOpen.update(cur => !cur)
   }
 
-  protected handleLogin = () => {
-    this.router.navigate(['/login']);
-  }
-
   protected menu = [
     {
       id: 'login',
       title: 'Log in',
       icon: './assets/login.svg',
-      action: this.handleLogin
+      action: () => this.router.navigate(['/login'])
     },
     {
       id: 'logout',
@@ -52,7 +48,7 @@ export class Menu implements OnInit, OnDestroy {
       id: 'profile',
       title: 'Profile',
       icon: './assets/user.svg',
-      action: () => undefined
+      action: () => this.router.navigate(['/profile'])
     }
   ]
 }

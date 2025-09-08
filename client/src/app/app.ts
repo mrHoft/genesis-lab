@@ -15,6 +15,6 @@ export class App {
 
   constructor() {
     this.userService = new UserService()
-    // this.userService.requestUser()
+    this.userService.requestUser()
   }
 }

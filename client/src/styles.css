@@ -90,3 +90,14 @@ button {
     background-color: var(--color-accent60);
   }
 }
+
+.backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: radial-gradient(circle at right center, #4a37ac80, #4172c2 50%, #32517380);
+  mask-image: linear-gradient(#0000, #000 50%, #0000);
+  z-index: -1;
+}

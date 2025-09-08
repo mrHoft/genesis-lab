@@ -1,5 +1,5 @@
 import { Injectable, signal, inject, computed } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { catchError, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import type { User } from './types';
@@ -23,7 +23,8 @@ export class UserService {
     }).pipe(
       tap(user => this.updateAndStoreUser(user)),
       catchError(error => {
-        if (error instanceof Error && error.message.includes('Token expired')) {
+        console.log(error.message)
+        if (error instanceof HttpErrorResponse && error.error.message.includes('Token expired')) {
           console.log('Token expired. Refreshing...');
           return this.refreshTokens().pipe(
             tap(() => this.retryUserRequest())
