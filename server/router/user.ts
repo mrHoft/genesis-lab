@@ -1,5 +1,6 @@
 import { UserService } from "../services/userService.ts";
 import { User, CreateUserDto, UpdateUserDto } from "../types/user.ts";
+import { ErrorResponse } from "../utils/error.ts";
 
 const DEV = Deno.env.get("DEV_MODE")
 
@@ -97,12 +98,12 @@ export class UserHandler {
 
     const [scheme, token] = authHeader.split(" ");
     if (scheme !== "Bearer" || !token) {
-      throw new Error("Invalid authorization scheme");
+      throw ErrorResponse.unauthorized("Invalid authorization scheme");
     }
 
     const user = await this.userService.findOneByToken(token);
     if (!user) {
-      throw new Error("User not found");
+      throw ErrorResponse.notFound("User not found");
     }
 
     const { password: _, ...userWithoutPassword } = user;
@@ -135,7 +136,7 @@ export class UserHandler {
     if (authHeader) {
       const [scheme, token] = authHeader.split(" ");
       if (scheme !== "Bearer" || !token) {
-        throw new Error("Invalid authorization scheme");
+        throw ErrorResponse.unauthorized("Invalid authorization scheme");
       }
       user = await this.userService.updateByToken(token, body);
     } else {
@@ -164,7 +165,7 @@ export class UserHandler {
     const body = await request.json();
 
     if (!body || !body.refreshToken || typeof body.refreshToken !== "string") {
-      throw new Error("Refresh token is required");
+      throw ErrorResponse.badRequest("Refresh token is required");
     }
 
     const tokens = await this.userService.refresh(body.refreshToken);

@@ -1,10 +1,11 @@
 import { loggerMiddleware } from "./logger.ts";
 import { withCors, handleOptions } from './cors.ts'
 import { serveStatic } from "./static.ts";
+import { errorHandler } from "../utils/error.ts";
 
 const API_PREFIX = "/api";
 
-export async function middleware(request: Request, next: (request: Request) => Promise<Response>): Promise<Response | null> {
+export async function middleware(request: Request, next: (request: Request) => Promise<Response>): Promise<Response> {
   const url = new URL(request.url);
 
   if (request.method === "OPTIONS") {
@@ -25,6 +26,8 @@ export async function middleware(request: Request, next: (request: Request) => P
 
     return loggerMiddleware(apiRequest, next).then(response => {
       return withCors(response, request);
+    }).catch(error => {
+      return Promise.resolve(withCors(errorHandler(error), request));
     })
   }
 

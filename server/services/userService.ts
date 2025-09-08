@@ -3,6 +3,7 @@ import { CreateUserDto, UpdateUserDto, User } from "../types/user.ts";
 import { JwtUtils, type JwtPayload } from "../utils/jwt.ts";
 import { executeQuery } from "../db/client.ts";
 import { validatePassword } from "../utils/validation.ts";
+import { ErrorResponse } from "../utils/error.ts";
 
 const JWT_TOKEN_KEY = Deno.env.get("JWT_TOKEN_KEY");
 const JWT_REFRESH_KEY = Deno.env.get("JWT_REFRESH_KEY");
@@ -45,7 +46,7 @@ export class UserService {
       const payload = await JwtUtils.verify(token, JWT_TOKEN_KEY!);
       return this.findOneById(payload.id);
     } catch (error) {
-      throw new Error(error instanceof Error ? error.message : "Invalid token");
+      throw ErrorResponse.fromError(error, 401);
     }
   }
 
@@ -87,7 +88,7 @@ export class UserService {
     if (user?.password) {
       const isValid = await bcrypt.compare(updateUserDto.password, user.password);
       if (!isValid) {
-        throw new Error("Invalid credentials");
+        throw ErrorResponse.unauthorized("Invalid credentials");
       }
     }
 
@@ -134,7 +135,7 @@ export class UserService {
       const payload = await JwtUtils.verify(token, JWT_TOKEN_KEY!);
       return this.update(payload.id, updateUserDto);
     } catch (error) {
-      throw new Error(error instanceof Error ? error.message : "Invalid token");
+      throw ErrorResponse.fromError(error, 401);
     }
   }
 
@@ -151,12 +152,12 @@ export class UserService {
       const user = await this.findOneById(payload.id);
 
       if (!user) {
-        throw new Error("User not found");
+        throw ErrorResponse.notFound("User not found");
       }
 
       return this.generateTokens(user);
     } catch (error) {
-      throw new Error(error instanceof Error ? error.message : "Invalid refresh token");
+      throw ErrorResponse.fromError(error, 401);
     }
   }
 
