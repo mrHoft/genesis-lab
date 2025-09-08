@@ -1,10 +1,14 @@
+@let needToAskOldPassword=isNonAnonymousUser();
+
 <div class="login">
   <form class="login__form" [formGroup]="form" (ngSubmit)="onSubmit()">
     <h3 class="login__form_header">Profile</h3>
     <input formControlName="name" placeholder="name" (input)="clearError()" />
     <input formControlName="email" placeholder="email" (input)="clearError()" />
     <input formControlName="login" placeholder="login*" required (input)="clearError()" />
-    <input formControlName="oldPassword" type="password" placeholder="password*" (input)="clearError()" />
+    @if(needToAskOldPassword){
+    <input formControlName="password" type="password" placeholder="password*" (input)="clearError()" />
+    }
     <input formControlName="newPassword" type="password" placeholder="new password" (input)="clearError()" />
     <div class="login__form_error">
       @if(validationErrors.length){

@@ -5,15 +5,43 @@ import { of } from 'rxjs';
 import type { User } from './types';
 import { UserStorage } from './user.storage';
 import { API_URL } from './const';
+import { MessageService } from '~/app/components/message/message.service';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
   private userStorage = new UserStorage();
   private userSignal = signal<User | undefined>(this.userStorage.user);
   private http = inject(HttpClient);
+  private messageService = inject(MessageService);
 
   public user = this.userSignal.asReadonly();
   public isAuthenticated = computed(() => this.user() !== undefined);
+
+  public requestLogin(body: { login: string, password: string }) {
+    this.http.post<User>(`${API_URL}/user`, body).pipe(
+      tap(user => this.updateAndStoreUser(user)),
+      catchError(error => {
+        throw error;
+      })
+    ).subscribe();
+  }
+
+  public requestUpdate(id: string, body: Partial<User>) {
+    const token = this.user()?.accessToken;
+    return this.http.patch<User>(`${API_URL}/user/${id}`, body, {
+      headers: token ? { Authorization: `Bearer ${token}` } : {}
+    }).pipe(
+      tap(user => {
+        this.updateAndStoreUser(user)
+        this.messageService.show('User update successful')
+      }),
+      catchError(error => {
+        const message = error instanceof HttpErrorResponse ? error.error.message : error instanceof Error ? error.message : String(error)
+        this.messageService.show(message, 'error')
+        throw error;
+      })
+    );
+  }
 
   public requestUser(): void {
     const token = this.user()?.accessToken;
@@ -23,7 +51,6 @@ export class UserService {
     }).pipe(
       tap(user => this.updateAndStoreUser(user)),
       catchError(error => {
-        console.log(error.message)
         if (error instanceof HttpErrorResponse && error.error.message.includes('Token expired')) {
           console.log('Token expired. Refreshing...');
           return this.refreshTokens().pipe(
@@ -38,6 +65,7 @@ export class UserService {
   private refreshTokens() {
     const refreshToken = this.user()?.refreshToken;
     if (!refreshToken) {
+      this.messageService.show('No refresh token available', 'error')
       throw new Error('No refresh token available');
     }
 
@@ -58,6 +86,7 @@ export class UserService {
       tap(user => this.updateAndStoreUser(user)),
       catchError(error => {
         console.error('Failed to fetch user after token refresh:', error);
+        this.messageService.show('Failed to fetch user after token refresh', 'error')
         return of(undefined);
       })
     ).subscribe();

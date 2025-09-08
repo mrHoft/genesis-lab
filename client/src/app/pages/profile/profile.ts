@@ -3,12 +3,7 @@ import { ReactiveFormsModule, FormControl, FormGroup, Validators } from '@angula
 import { passwordValidator } from '~/app/utils/validation/password';
 import { UserService } from '~/api/user.service';
 // import { Router } from '@angular/router';
-// import { i18n } from '~/data/i18n.en';
-
-const EXAMPLE_CREDENTIALS = {
-  name: 'Hobbs',
-  password: 'sit'
-}
+import { i18n } from '~/data/i18n.en';
 
 @Component({
   selector: 'app-profile',
@@ -27,13 +22,9 @@ export class PageProfile {
       name: new FormControl('', { validators: [Validators.maxLength(24)] }),
       email: new FormControl('', { validators: [Validators.email, Validators.maxLength(24)] }),
       login: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.maxLength(24)] }),
-      oldPassword: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.maxLength(24), passwordValidator] }),
+      password: new FormControl('', { validators: [Validators.maxLength(24), passwordValidator] }),
       newPassword: new FormControl('', { validators: [Validators.maxLength(24), passwordValidator] })
     });
-  }
-
-  protected clearError() {
-    this.errorMessage.set(null);
   }
 
   protected get validationErrors(): string[] {
@@ -61,11 +52,21 @@ export class PageProfile {
     this.form.patchValue(user || {});
   }
 
+  protected clearError() {
+    this.errorMessage.set(null);
+  }
+
+  protected isNonAnonymousUser() {
+    const user = this.userService.user()
+    return Boolean(user?.login)
+  }
+
   protected onSubmit() {
+    const user = this.userService.user()
+    if (!user) return
     const value = this.form.getRawValue();
-    console.log(value)
-    /*
-    this.userService.login(value).subscribe({
+
+    this.userService.requestUpdate(user?.id, value).subscribe({
       error: (error) => {
         if (error.status === 401) {
           this.errorMessage.set(i18n.unauthorized);
@@ -74,8 +75,8 @@ export class PageProfile {
         }
       },
       next: () => {
-        this.router.navigate(['/']);
+        // this.router.navigate(['/']);
       }
-    }); */
+    });
   }
 }

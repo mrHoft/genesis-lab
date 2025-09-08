@@ -1,0 +1,8 @@
+<div class="modal__overlay" [class.hidden]="!isVisible()" (click)="handleClickOutside($event)">
+  <div class="modal__inner">
+    <div class="modal__close" (click)="close()">
+      <img src="./assets/cross.svg" alt="close" />
+    </div>
+    <ng-container #modalHost />
+  </div>
+</div>

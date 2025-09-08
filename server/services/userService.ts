@@ -115,7 +115,7 @@ export class UserService {
     }
 
     updates.push(`version = version + 1`);
-    updates.push(`updatedAt = EXTRACT(EPOCH FROM NOW())::integer`);
+    updates.push(`updated_at = EXTRACT(EPOCH FROM NOW())::integer`);
 
     values.push(id);
 
