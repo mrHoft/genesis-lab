@@ -1,14 +1,24 @@
 # GenesisLab
 
-A beautiful and interactive visualization of the math fractals, rendered on a canvas. This project demonstrates how mathematical functions can generate complex and visually stunning patterns.
+A service to create, share, view and like pictures generated based on mathematical sets. This project demonstrates how mathematical functions can generate complex and visually stunning patterns.
 
 ### Features
-- Mandelbrot Set Rendering: Accurate implementation of the Mandelbrot fractal algorithm
-- Interactive Zooming: Zoom in to explore intricate details or zoom out for a broader view
-- Multiple Color Palettes: Cycle through several visually appealing color schemes
-- Responsive Design: Clean UI with a dark theme that highlights the fractal beauty
-- HSV to RGB color conversion for smooth gradients
-- Pure TypeScript/JavaScript: No external libraries required
+
+1. Manage user account via Deno + Postgres server:
+  - Auto creating anonymous account.
+  - Profile editing.
+  - Auth by token or by credentials.
+  - User savings and global gallery.
+2. Generation:
+  - Mandelbrot Set Rendering: accurate implementation of the Mandelbrot fractal algorithm
+  - Interactive Zooming: zoom in to explore intricate details or zoom out for a broader view
+  - Multiple Color Palettes: cycle through several visually appealing color schemes
+  - Responsive Design: clean UI with a dark/light theme that highlights the fractal beauty
+  - HSV to RGB color conversion for smooth gradients
+  - Pure TypeScript/JavaScript: no external libraries
+3. Gallery:
+  - User created images are available through the gallery.
+  - Gallery can be used to receive likes and review used algorithm arguments.
 
 ### How It Works
 The Mandelbrot set is created by iterating the function f(z) = z² + c for complex numbers. Each point on the canvas is colored based on how quickly the iteration diverges (if at all), creating the intricate patterns characteristic of fractals.
@@ -20,7 +30,7 @@ The Mandelbrot set is created by iterating the function f(z) = z² + c for compl
 
 ✅ Serve index.html for all non-API routes (SPA support)
 
-✅ Handle favicon and assets properly
+✅ Handle cors policy
 
 ✅ Apply appropriate caching headers
 

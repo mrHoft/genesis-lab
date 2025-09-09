@@ -4,6 +4,14 @@
     <h3>Genesis lab</h3>
   </a>
   <div>
+    @for(tab of tabs; track tab.id){
+    <a [routerLink]="`/${tab.link}`" class="tab" [class.active]="tab.link==currentRoute">
+      <img [src]="tab.icon" [alt]="tab.id" />
+      <span>{{tab.title}}</span>
+    </a>
+    }
+  </div>
+  <div>
     <app-menu />
   </div>
 </header>

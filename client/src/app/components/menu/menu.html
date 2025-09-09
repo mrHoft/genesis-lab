@@ -4,6 +4,7 @@
 
 @if(menuOpen()){
 <ul class="menu">
+  <li class="menu__title">{{title()}}</li>
   @for(item of menu; track item.id){
   <li class="menu__item" (click)="item.action()">
     <img [src]="item.icon" [alt]="item.id" />

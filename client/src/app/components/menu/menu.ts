@@ -1,5 +1,6 @@
 import { Component, inject, signal, ViewChild, ElementRef, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { UserService } from '~/api/user.service';
 
 @Component({
   selector: 'app-menu',
@@ -10,6 +11,7 @@ import { Router } from '@angular/router';
 export class Menu implements OnInit, OnDestroy {
   protected menuOpen = signal(false)
   private router = inject(Router);
+  private userService = inject(UserService);
 
   @ViewChild('menuButton', { static: true })
   private menuButtonRef!: ElementRef<HTMLElement>;
@@ -30,6 +32,8 @@ export class Menu implements OnInit, OnDestroy {
   protected handleMenu = () => {
     this.menuOpen.update(cur => !cur)
   }
+
+  protected title = () => this.userService.user()?.name
 
   protected menu = [
     {

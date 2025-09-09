@@ -1,3 +1,5 @@
+import { ITERATIONS } from '~/data/const';
+
 function hsvToRgb(h: number, s: number, v: number): { r: number; g: number; b: number } {
   let r = 0, g = 0, b = 0;
   const i = Math.floor(h * 6);
@@ -22,14 +24,14 @@ function hsvToRgb(h: number, s: number, v: number): { r: number; g: number; b: n
   };
 }
 
-type TPalette = { r: number; g: number; b: number }[]
-type TPaletteName = 'rainbow' | 'fire' | 'ocean' | 'pastel' | 'forest'
+export type TPalette = { r: number; g: number; b: number }[]
+export type TPaletteName = 'rainbow' | 'fire' | 'ocean' | 'pastel' | 'forest' | 'grayscale'
 
 export const palette: Record<TPaletteName, (() => TPalette)> = {
   rainbow: () => {
     const palette = [];
-    for (let i = 0; i < 100; i++) {
-      const hue = (i * 360 / 100) % 360;
+    for (let i = 0; i < ITERATIONS; i++) {
+      const hue = (i * 360 / ITERATIONS) % 360;
       const rgb = hsvToRgb(hue / 360, 1, 1);
       palette.push(rgb);
     }
@@ -37,42 +39,57 @@ export const palette: Record<TPaletteName, (() => TPalette)> = {
   },
   fire: () => {
     const palette = [];
-    for (let i = 0; i < 100; i++) {
-      const r = Math.min(255, i * 8);
-      const g = Math.min(255, i * 4);
-      const b = Math.min(255, i * 2);
+    const p = 255 / ITERATIONS / 6
+    for (let i = 0; i < ITERATIONS; i++) {
+      const r = Math.min(255, i * p * 8);
+      const g = Math.min(255, i * p * 4);
+      const b = Math.min(255, i * p * 2);
       palette.push({ r, g, b });
     }
     return palette;
   },
   ocean: () => {
     const palette = [];
-    for (let i = 0; i < 100; i++) {
-      const r = Math.min(255, i * 2);
-      const g = Math.min(255, i * 4);
-      const b = Math.min(255, i * 8);
+    const p = 255 / ITERATIONS / 6
+    for (let i = 0; i < ITERATIONS; i++) {
+      const r = Math.min(255, i * p * 2);
+      const g = Math.min(255, i * p * 4);
+      const b = Math.min(255, i * p * 8);
       palette.push({ r, g, b });
     }
     return palette;
   },
   forest: () => {
     const palette = [];
-    for (let i = 0; i < 100; i++) {
-      const r = Math.min(255, i * 3);
-      const g = Math.min(255, i * 6);
-      const b = Math.min(255, i * 2);
+    const p = 255 / ITERATIONS / 6
+    for (let i = 0; i < ITERATIONS; i++) {
+      const r = Math.min(255, i * p * 3);
+      const g = Math.min(255, i * p * 6);
+      const b = Math.min(255, i * p * 2);
       palette.push({ r, g, b });
     }
     return palette;
   },
   pastel: () => {
     const palette = [];
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < ITERATIONS; i++) {
       const r = 128 + Math.floor(127 * Math.sin(i * 0.1));
       const g = 128 + Math.floor(127 * Math.sin(i * 0.1 + 2));
       const b = 128 + Math.floor(127 * Math.sin(i * 0.1 + 4));
       palette.push({ r, g, b });
     }
     return palette;
+  },
+  grayscale: () => {
+    const palette = [];
+    const p = 255 / ITERATIONS / 6
+    for (let i = 0; i < ITERATIONS; i++) {
+      const r = Math.min(255, i * p * 6);
+      const g = Math.min(255, i * p * 6);
+      const b = Math.min(255, i * p * 6);
+      palette.push({ r, g, b });
+    }
+    return palette;
+
   }
 }
