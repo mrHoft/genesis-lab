@@ -28,6 +28,8 @@ export class UserHandler {
         case "POST":
           if (pathSegments[1] === "refresh") {
             return this.refresh(request);
+          } else if (pathSegments[1] === "login") {
+            return this.login(request);
           }
           return this.create(request);
         case "PATCH":
@@ -76,6 +78,17 @@ export class UserHandler {
 
     const users = await this.userService.findAll();
     return new Response(JSON.stringify(users), {
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+
+  private async login(request: Request): Promise<Response> {
+    const body: CreateUserDto = await request.json();
+
+    const user = await this.userService.login(body);
+
+    const { password: _, ...userWithoutPassword } = user;
+    return new Response(JSON.stringify(userWithoutPassword), {
       headers: { "Content-Type": "application/json" },
     });
   }

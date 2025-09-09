@@ -73,6 +73,24 @@ export class UserService {
     return users[0];
   }
 
+  async login(loginUserDto: CreateUserDto): Promise<User> {
+    if (!loginUserDto.login || !loginUserDto.password) {
+      throw ErrorResponse.unauthorized("Invalid credentials")
+    }
+    const user = await this.findOneByLogin(loginUserDto.login)
+
+    if (!user || !user.password) {
+      throw ErrorResponse.unauthorized()
+    }
+
+    const isValid = await bcrypt.compare(loginUserDto.password, user.password);
+    if (!isValid) {
+      throw ErrorResponse.unauthorized("Invalid credentials");
+    }
+
+    return user
+  }
+
   async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
     // Validate new password if provided
     if (updateUserDto.newPassword) {

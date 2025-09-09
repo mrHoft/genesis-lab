@@ -1,13 +1,8 @@
 import { Component, inject, signal } from '@angular/core';
 import { ReactiveFormsModule, FormControl, FormGroup } from '@angular/forms';
-// import { UserService } from '~/api/user.service';
-// import { Router } from '@angular/router';
-// import { i18n } from '~/data/i18n.en';
-
-const EXAMPLE_CREDENTIALS = {
-  userName: 'Hobbs',
-  password: 'sit'
-}
+import { UserService } from '~/api/user.service';
+import { Router } from '@angular/router';
+import { i18n } from '~/data/i18n.en';
 
 @Component({
   selector: 'app-login',
@@ -16,8 +11,8 @@ const EXAMPLE_CREDENTIALS = {
   styleUrl: './login.css'
 })
 export class PageLogin {
-  // private router = inject(Router);
-  // private userService = inject(UserService);
+  private router = inject(Router);
+  private userService = inject(UserService);
   protected errorMessage = signal<string | null>(null);
 
   protected clearError() {
@@ -25,20 +20,14 @@ export class PageLogin {
   }
 
   protected form = new FormGroup({
-    userName: new FormControl('', { nonNullable: true }),
+    login: new FormControl('', { nonNullable: true }),
     password: new FormControl('', { nonNullable: true })
   });
 
-
-  ngOnInit() {
-    this.form.patchValue(EXAMPLE_CREDENTIALS);
-  }
-
   protected onSubmit() {
-    const value = this.form.getRawValue();
-    console.log(value)
-    /*
-    this.userService.login(value).subscribe({
+    const formData = this.form.getRawValue();
+
+    this.userService.requestLogin(formData).subscribe({
       error: (error) => {
         if (error.status === 401) {
           this.errorMessage.set(i18n.unauthorized);
@@ -49,6 +38,6 @@ export class PageLogin {
       next: () => {
         this.router.navigate(['/']);
       }
-    }); */
+    });
   }
 }

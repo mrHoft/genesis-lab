@@ -17,13 +17,22 @@ export class UserService {
   public user = this.userSignal.asReadonly();
   public isAuthenticated = computed(() => this.user() !== undefined);
 
+  private showErrorMessage = (error: unknown) => {
+    const message = error instanceof HttpErrorResponse ? error.error.message : error instanceof Error ? error.message : String(error)
+    this.messageService.show(message, 'error')
+  }
+
   public requestLogin(body: { login: string, password: string }) {
-    this.http.post<User>(`${API_URL}/user`, body).pipe(
-      tap(user => this.updateAndStoreUser(user)),
+    return this.http.post<User>(`${API_URL}/user/login`, body).pipe(
+      tap(user => {
+        this.updateAndStoreUser(user)
+        this.messageService.show('Authorization successful')
+      }),
       catchError(error => {
+        this.showErrorMessage(error)
         throw error;
       })
-    ).subscribe();
+    );
   }
 
   public requestUpdate(id: string, body: Partial<User>) {
@@ -36,8 +45,7 @@ export class UserService {
         this.messageService.show('User update successful')
       }),
       catchError(error => {
-        const message = error instanceof HttpErrorResponse ? error.error.message : error instanceof Error ? error.message : String(error)
-        this.messageService.show(message, 'error')
+        this.showErrorMessage(error)
         throw error;
       })
     );
