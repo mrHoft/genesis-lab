@@ -1,6 +1,6 @@
-import { UserService } from "../services/userService.ts";
-import { User, CreateUserDto, UpdateUserDto } from "../types/user.ts";
-import { ErrorResponse } from "../utils/error.ts";
+import { UserService } from "~/services/user.service.ts";
+import { User, CreateUserDto, UpdateUserDto } from "~/types/user.ts";
+import { ErrorResponse } from "~/utils/error.ts";
 
 const DEV = Deno.env.get("DEV_MODE")
 

@@ -1,26 +1,30 @@
 export interface User {
-  id: string;
-  name: string;
-  login?: string;
-  password?: string;
-  version: number;
-  createdAt: number;
-  updatedAt: number;
+  id: string
+  name: string
+  email?: string
+  login?: string
+  password?: string
+  version: number
+  settings?: Record<string, string>
+  createdAt: number
+  updatedAt: number
 }
 
 export interface CreateUserDto {
-  name?: string;
-  login?: string;
-  password?: string;
+  name?: string
+  email?: string
+  login?: string
+  password?: string
 }
 
 export interface UpdateUserDto {
-  password: string;
-  newPassword?: string;
-  name?: string;
-  login?: string;
+  name?: string
+  email?: string
+  login?: string
+  password: string
+  newPassword?: string
 }
 
 export interface FindUserDto {
-  id: string;
+  id: string
 }

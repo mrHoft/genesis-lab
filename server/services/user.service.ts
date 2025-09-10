@@ -1,9 +1,9 @@
 import * as bcrypt from "https://deno.land/x/bcrypt@v0.4.1/mod.ts";
-import { CreateUserDto, UpdateUserDto, User } from "../types/user.ts";
-import { JwtUtils, type JwtPayload } from "../utils/jwt.ts";
-import { executeQuery } from "../db/client.ts";
-import { validatePassword } from "../utils/validation.ts";
-import { ErrorResponse } from "../utils/error.ts";
+import { CreateUserDto, UpdateUserDto, User } from "~/types/user.ts";
+import { JwtUtils, type JwtPayload } from "~/utils/jwt.ts";
+import { executeQuery } from "~/db/client.ts";
+import { validatePassword } from "~/utils/validation.ts";
+import { ErrorResponse } from "~/utils/error.ts";
 
 const JWT_TOKEN_KEY = Deno.env.get("JWT_TOKEN_KEY");
 const JWT_REFRESH_KEY = Deno.env.get("JWT_REFRESH_KEY");
@@ -21,13 +21,13 @@ const REFRESH_EXPIRE_TIME = Deno.env.get("REFRESH_EXPIRE_TIME") || "7d";
 export class UserService {
   findAll(): Promise<User[]> {
     return executeQuery<User>(
-      "SELECT id, name, login, version, created_at as \"createdAt\", updated_at as \"updatedAt\" FROM users"
+      "SELECT id, name, login, email, version, created_at as \"createdAt\", updated_at as \"updatedAt\" FROM users"
     );
   }
 
   async findOneById(id: string): Promise<User | null> {
     const users = await executeQuery<User>(
-      "SELECT id, name, login, password, version, created_at as \"createdAt\", updated_at as \"updatedAt\" FROM users WHERE id = $1",
+      "SELECT id, name, login, email, password, version, created_at as \"createdAt\", updated_at as \"updatedAt\" FROM users WHERE id = $1",
       [id]
     );
     return users[0] || null;
@@ -35,7 +35,7 @@ export class UserService {
 
   async findOneByLogin(login: string): Promise<User | null> {
     const users = await executeQuery<User>(
-      "SELECT id, name, login, password, version, created_at as \"createdAt\", updated_at as \"updatedAt\" FROM users WHERE login = $1",
+      "SELECT id, name, login, email, password, version, created_at as \"createdAt\", updated_at as \"updatedAt\" FROM users WHERE login = $1",
       [login]
     );
     return users[0] || null;
@@ -60,12 +60,13 @@ export class UserService {
       : undefined;
 
     const users = await executeQuery<User>(
-      `INSERT INTO users (name, login, password)
-       VALUES ($1, $2, $3)
-       RETURNING id, name, login, version, created_at as \"createdAt\", updated_at as \"updatedAt\"`,
+      `INSERT INTO users (name, login, email, password)
+       VALUES ($1, $2, $3, $4)
+       RETURNING id, name, login, email, version, created_at as \"createdAt\", updated_at as \"updatedAt\"`,
       [
         createUserDto.name || `User_${Math.random().toString(36).slice(2, 10)}`,
-        createUserDto.login || undefined,
+        createUserDto.login,
+        createUserDto.email,
         hashedPassword
       ]
     );
@@ -92,17 +93,29 @@ export class UserService {
   }
 
   async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
-    // Validate new password if provided
     if (updateUserDto.newPassword) {
-      validatePassword(updateUserDto.newPassword);
+      try {
+        validatePassword(updateUserDto.newPassword);
+      } catch (error) {
+        throw ErrorResponse.fromError(error, 400)
+      }
     }
 
-    const users = await executeQuery<{ password?: string }>(
+    if (updateUserDto.login) {
+      const exists = await executeQuery<{ id: string }>(
+        "SELECT id FROM users WHERE login = $1",
+        [updateUserDto.login]
+      );
+      if (exists.length > 0 && exists[0].id !== id) {
+        throw ErrorResponse.badRequest(`User with ${updateUserDto.login} login already exists`)
+      }
+    }
+
+    const user = (await executeQuery<{ password?: string }>(
       "SELECT password FROM users WHERE id = $1",
       [id]
-    );
+    ))[0];
 
-    const user = users[0];
     if (user?.password) {
       const isValid = await bcrypt.compare(updateUserDto.password, user.password);
       if (!isValid) {
@@ -126,6 +139,12 @@ export class UserService {
       paramCount++;
     }
 
+    if (updateUserDto.email) {
+      updates.push(`email = $${paramCount}`);
+      values.push(updateUserDto.email);
+      paramCount++;
+    }
+
     if (updateUserDto.newPassword) {
       updates.push(`password = $${paramCount}`);
       values.push(await bcrypt.hash(updateUserDto.newPassword));
@@ -137,11 +156,11 @@ export class UserService {
 
     values.push(id);
 
-    const query = `
+    const query = /* sql */`
       UPDATE users
       SET ${updates.join(", ")}
       WHERE id = $${paramCount}
-      RETURNING id, name, login, version, created_at as \"createdAt\", updated_at as \"updatedAt\"
+      RETURNING id, name, login, email, version, created_at as \"createdAt\", updated_at as \"updatedAt\"
     `;
 
     const result = await executeQuery<User>(query, values);
