@@ -1,7 +1,9 @@
 import { handleHealth } from './health.ts';
 import { UserHandler } from "./user.ts";
+import { GalleryHandler } from "./gallery.ts";
 
 const userHandler = new UserHandler();
+const galleryHandler = new GalleryHandler();
 
 export async function handleRequest(request: Request) {
   const url = new URL(request.url);
@@ -14,6 +16,10 @@ export async function handleRequest(request: Request) {
 
   if (pathSegments[0] === "user") {
     return await userHandler.handleRequest(request, pathSegments);
+  }
+
+  if (pathSegments[0] === "gallery") {
+    return await galleryHandler.handleRequest(request, pathSegments);
   }
 
   return new Response(JSON.stringify({ error: "Not found" }), {

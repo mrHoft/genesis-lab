@@ -1,0 +1,8 @@
+CREATE TABLE IF NOT EXISTS gallery (
+  id SERIAL PRIMARY KEY,
+  user_id CHAR(8) NOT NULL,
+  thumbnail VARCHAR(3200) NOT NULL,
+  props JSONB NOT NULL DEFAULT '{}',
+  likes CHAR(8)[] NOT NULL DEFAULT '{}',
+  created_at INTEGER DEFAULT EXTRACT(EPOCH FROM NOW())::integer
+);

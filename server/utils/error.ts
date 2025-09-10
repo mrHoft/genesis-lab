@@ -17,7 +17,7 @@ export class ErrorResponse extends Error {
   toJSON() {
     return {
       success: false,
-      message: this.message,
+      error: this.message,
       statusCode: this.statusCode,
       timestamp: this.timestamp.toISOString()
     };

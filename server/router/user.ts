@@ -44,15 +44,10 @@ export class UserHandler {
           break;
       }
 
-      return Promise.resolve(new Response(JSON.stringify({ error: "Not found" }), {
-        status: 404,
-        headers: { "Content-Type": "application/json" },
-      }));
+      return Promise.resolve(new Response(JSON.stringify({ error: "Not found" }), { status: 404, headers: { "Content-Type": "application/json" } }));
     } catch (error) {
-      return Promise.resolve(new Response(
-        JSON.stringify({ error: error instanceof Error ? error.message : 'Unknown error' }),
-        { status: 400, headers: { "Content-Type": "application/json" } }
-      ));
+      const message = error instanceof Error ? error.message : 'Unknown error'
+      return Promise.resolve(new Response(JSON.stringify({ error: message }), { status: 400, headers: { "Content-Type": "application/json" } }));
     }
   }
 
@@ -62,24 +57,16 @@ export class UserHandler {
     const user = await this.userService.create(body);
     const { password: _, ...userWithoutPassword } = user;
 
-    return new Response(JSON.stringify(userWithoutPassword), {
-      status: 201,
-      headers: { "Content-Type": "application/json" },
-    });
+    return new Response(JSON.stringify(userWithoutPassword), { status: 201, headers: { "Content-Type": "application/json" } });
   }
 
   private async findAll(): Promise<Response> {
     if (!DEV) {
-      return new Response(JSON.stringify({ error: "Access Denied" }), {
-        status: 403,
-        headers: { "Content-Type": "application/json" },
-      });
+      return new Response(JSON.stringify({ error: "Access Denied" }), { status: 403, headers: { "Content-Type": "application/json" } });
     }
 
     const users = await this.userService.findAll();
-    return new Response(JSON.stringify(users), {
-      headers: { "Content-Type": "application/json" },
-    });
+    return new Response(JSON.stringify(users), { headers: { "Content-Type": "application/json" } });
   }
 
   private async login(request: Request): Promise<Response> {
@@ -88,9 +75,7 @@ export class UserHandler {
     const user = await this.userService.login(body);
 
     const { password: _, ...userWithoutPassword } = user;
-    return new Response(JSON.stringify(userWithoutPassword), {
-      headers: { "Content-Type": "application/json" },
-    });
+    return new Response(JSON.stringify(userWithoutPassword), { headers: { "Content-Type": "application/json" } });
   }
 
   private async getUser(request: Request): Promise<Response> {
@@ -104,40 +89,31 @@ export class UserHandler {
       const body = JSON.stringify({ ...userWithoutPassword, ...tokens })
       console.log('tokens', tokens)
 
-      return new Response(body, {
-        headers: { "Content-Type": "application/json" },
-      });
+      return new Response(body, { headers: { "Content-Type": "application/json" } });
     }
 
     const [scheme, token] = authHeader.split(" ");
     if (scheme !== "Bearer" || !token) {
-      throw ErrorResponse.unauthorized("Invalid authorization scheme");
+      return ErrorResponse.unauthorized("Invalid authorization scheme").toResponse();
     }
 
     const user = await this.userService.findOneByToken(token);
     if (!user) {
-      throw ErrorResponse.notFound("User not found");
+      return ErrorResponse.notFound("User not found").toResponse();
     }
 
     const { password: _, ...userWithoutPassword } = user;
-    return new Response(JSON.stringify(userWithoutPassword), {
-      headers: { "Content-Type": "application/json" },
-    });
+    return new Response(JSON.stringify(userWithoutPassword), { headers: { "Content-Type": "application/json" } });
   }
 
   private async findOne(id: string): Promise<Response> {
     const user = await this.userService.findOneById(id);
     if (!user) {
-      return new Response(JSON.stringify({ error: "User not found" }), {
-        status: 404,
-        headers: { "Content-Type": "application/json" },
-      });
+      return new Response(JSON.stringify({ error: "User not found" }), { status: 404, headers: { "Content-Type": "application/json" } });
     }
 
     const { password: _, ...userWithoutPassword } = user;
-    return new Response(JSON.stringify(userWithoutPassword), {
-      headers: { "Content-Type": "application/json" },
-    });
+    return new Response(JSON.stringify(userWithoutPassword), { headers: { "Content-Type": "application/json" } });
   }
 
   private async update(id: string, request: Request): Promise<Response> {
@@ -149,7 +125,7 @@ export class UserHandler {
     if (authHeader) {
       const [scheme, token] = authHeader.split(" ");
       if (scheme !== "Bearer" || !token) {
-        throw ErrorResponse.unauthorized("Invalid authorization scheme");
+        return ErrorResponse.unauthorized("Invalid authorization scheme").toResponse();
       }
       user = await this.userService.updateByToken(token, body);
     } else {
@@ -157,17 +133,12 @@ export class UserHandler {
     }
 
     const { password: _, ...userWithoutPassword } = user;
-    return new Response(JSON.stringify(userWithoutPassword), {
-      headers: { "Content-Type": "application/json" },
-    });
+    return new Response(JSON.stringify(userWithoutPassword), { headers: { "Content-Type": "application/json" } });
   }
 
   private async remove(id: string): Promise<Response> {
     if (!DEV) {
-      return new Response(JSON.stringify({ error: "Access Denied" }), {
-        status: 403,
-        headers: { "Content-Type": "application/json" },
-      });
+      return new Response(JSON.stringify({ error: "Access Denied" }), { status: 403, headers: { "Content-Type": "application/json" } });
     }
 
     await this.userService.remove(id);
@@ -178,12 +149,10 @@ export class UserHandler {
     const body = await request.json();
 
     if (!body || !body.refreshToken || typeof body.refreshToken !== "string") {
-      throw ErrorResponse.badRequest("Refresh token is required");
+      return ErrorResponse.badRequest("Refresh token is required").toResponse();
     }
 
     const tokens = await this.userService.refresh(body.refreshToken);
-    return new Response(JSON.stringify(tokens), {
-      headers: { "Content-Type": "application/json" },
-    });
+    return new Response(JSON.stringify(tokens), { headers: { "Content-Type": "application/json" } });
   }
 }
