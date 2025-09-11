@@ -1,51 +1,13 @@
 import { Component, inject, signal, computed, HostListener } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { GalleryService } from '~/api/gallery.service';
 import type { GalleryRecord } from '~/api/types';
+import { Loader } from '~/app/components/loader/loader';
 
 @Component({
   selector: 'app-gallery',
-  standalone: true,
-  imports: [CommonModule],
-  template: `
-    <div class="gallery-container">
-      @for (item of galleryRecords(); track item.id) {
-        <div class="gallery-item">
-          <img
-            [src]="item.thumbnail"
-            alt="thumbnail"
-            width="300"
-            height="300"
-          />
-          <span>id: {{item.id}} likes: {{item.likes.length}}</span>
-        </div>
-      }
-      @if (loading()) {
-        <div class="loading">Loading more...</div>
-      }
-    </div>
-  `,
-  styles: [`
-    .gallery-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 16px;
-      padding: 16px;
-    }
-
-    .gallery-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .loading {
-      grid-column: 1 / -1;
-      text-align: center;
-      padding: 20px;
-    }
-  `]
+  imports: [Loader],
+  templateUrl: './gallery.html',
+  styleUrl: './gallery.css'
 })
 export class PageGallery {
   private galleryService = inject(GalleryService);

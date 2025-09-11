@@ -31,13 +31,14 @@ export class GalleryService {
     ).subscribe();
   }
 
-  public get(page: number, limit: number = 5, userId?: string) {
-    const map = new Map()
-    map.set('page', page)
-    map.set('limit', limit)
-    if (userId) map.set('user_id', userId)
-    const search = Array.from(map.entries()).reduce((acc, [key, value]) => `${acc}&${key}=${value}`, '').slice(1)
-    return this.http.get<GalleryResponse>(`${API_URL}/gallery/?${search}`)
+  public get(page: number, limit: number = 10, userId?: string) {
+    const params = new URLSearchParams({
+      page: page.toString(),
+      limit: limit.toString(),
+      ...(userId && { user_id: userId })
+    });
+
+    return this.http.get<GalleryResponse>(`${API_URL}/gallery/?${params.toString()}`);
   }
 
   public like(id: string | number): void {

@@ -103,7 +103,5 @@ export class UserService {
 
     this.userSignal.set(updatedUser);
     this.userStorage.user = updatedUser;
-
-    console.log(updatedUser)
   }
 }

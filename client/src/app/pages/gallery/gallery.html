@@ -1,1 +1,11 @@
-<p>gallery works!</p>
+<div class="gallery-container">
+  @for (item of galleryRecords(); track item.id) {
+  <div class="gallery-item">
+    <img [src]="item.thumbnail" alt="thumbnail" width="300" height="300" />
+    <span>id: {{item.id}} likes: {{item.likes.length}}</span>
+  </div>
+  }
+  @if (loading()) {
+  <div class="loading"><app-loader /></div>
+  }
+</div>
