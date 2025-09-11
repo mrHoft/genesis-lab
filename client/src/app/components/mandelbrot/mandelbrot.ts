@@ -1,20 +1,10 @@
-import { Component, effect, signal, afterNextRender } from '@angular/core';
+import { Component, effect, signal, inject, afterNextRender } from '@angular/core';
 import { createThumbnail } from '~/app/utils/thumbnail';
 import { ITERATIONS } from '~/data/const';
 import { fractals, fractalTypes, type TFractalType } from '~/data/fractal';
 import { palette, type TPalette } from '~/data/palette';
-
-interface FractalData {
-  fractal: TFractalType
-  p1: number
-  p2: number
-  scale: number
-  x: number
-  y: number
-  palette: number
-  invert: boolean
-  fill: boolean
-}
+import { GalleryService } from '~/api/gallery.service';
+import type { FractalData } from '~/api/types';
 
 const defaultFractal: FractalData = {
   fractal: 'mandelbrot',
@@ -51,6 +41,8 @@ export class Mandelbrot {
   protected thumbnail = signal('')
   readonly fractalBtns = fractalTypes.map(name => ({ id: name, icon: fractals[name].icon }))
   readonly renderTrigger = signal(0);
+
+  private galleryService = inject(GalleryService)
 
   constructor() {
     this.colorPalettes = [
@@ -172,8 +164,11 @@ export class Mandelbrot {
   }
 
   public handleSave() {
-    const data: FractalData = { ...this.fractalData() }
-    console.log(data)
+    const props: FractalData = { ...this.fractalData() }
+    console.log(props)
+
+    const thumbnail = createThumbnail(this.imageData, 32, 32)
+    this.galleryService.add({ props, thumbnail })
   }
 
   private initializeCanvas(): void {

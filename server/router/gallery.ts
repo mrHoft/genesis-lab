@@ -56,9 +56,12 @@ export class GalleryHandler {
 
   private async getGallery(request: Request): Promise<Response> {
     const url = new URL(request.url);
-    const page = Math.max(1, parseInt(url.searchParams.get("page") || "1"));
+    const page = Math.max(0, parseInt(url.searchParams.get("page") || "1"));
     const limit = Math.min(100, Math.max(1, parseInt(url.searchParams.get("limit") || "10")));
     const userId = url.searchParams.get("user_id");
+    console.log('Request:', request)
+    console.log('Requested url:', request.url)
+    console.log('Request gallery:', page, limit, `(${url.searchParams.get("page")}, ${url.searchParams.get("limit")})`)
 
     const result = await this.galleryService.findAll(page, limit, userId || undefined);
 

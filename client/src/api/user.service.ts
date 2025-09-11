@@ -6,21 +6,17 @@ import type { User } from './types';
 import { UserStorage } from './user.storage';
 import { API_URL } from './const';
 import { MessageService } from '~/app/components/message/message.service';
+import { errorToMessage } from './api-message';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
   private userStorage = new UserStorage();
+  private messageService = inject(MessageService)
   private userSignal = signal<User | undefined>(this.userStorage.user);
   private http = inject(HttpClient);
-  private messageService = inject(MessageService);
 
   public user = this.userSignal.asReadonly();
   public isAuthenticated = computed(() => this.user() !== undefined);
-
-  private showErrorMessage = (error: unknown) => {
-    const message = error instanceof HttpErrorResponse ? error.error.message : error instanceof Error ? error.message : String(error)
-    this.messageService.show(message, 'error')
-  }
 
   public requestLogin(body: { login: string, password: string }) {
     return this.http.post<User>(`${API_URL}/user/login`, body).pipe(
@@ -29,7 +25,7 @@ export class UserService {
         this.messageService.show('Authorization successful')
       }),
       catchError(error => {
-        this.showErrorMessage(error)
+        this.messageService.show(errorToMessage(error), 'error')
         throw error;
       })
     );
@@ -45,7 +41,7 @@ export class UserService {
         this.messageService.show('User update successful')
       }),
       catchError(error => {
-        this.showErrorMessage(error)
+        this.messageService.show(errorToMessage(error), 'error')
         throw error;
       })
     );
@@ -59,7 +55,7 @@ export class UserService {
     }).pipe(
       tap(user => this.updateAndStoreUser(user)),
       catchError(error => {
-        if (error instanceof HttpErrorResponse && error.error.message.includes('Token expired')) {
+        if (error instanceof HttpErrorResponse && error.error?.error.includes('Token expired')) {
           console.log('Token expired. Refreshing...');
           return this.refreshTokens().pipe(
             tap(() => this.retryUserRequest())
@@ -73,8 +69,9 @@ export class UserService {
   private refreshTokens() {
     const refreshToken = this.user()?.refreshToken;
     if (!refreshToken) {
-      this.messageService.show('No refresh token available', 'error')
-      throw new Error('No refresh token available');
+      const error = new Error('No refresh token available')
+      this.messageService.show(errorToMessage(error), 'error')
+      throw error;
     }
 
     return this.http.post<{ accessToken: string; refreshToken: string }>(

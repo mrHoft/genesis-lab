@@ -15,7 +15,7 @@ export async function middleware(request: Request, next: (request: Request) => P
   // Serve api
   if (url.pathname.startsWith(API_PREFIX)) {
     const apiPath = url.pathname.slice(API_PREFIX.length) || "/";
-    const apiUrl = new URL(apiPath, url.origin);
+    const apiUrl = new URL(apiPath + url.search, url.origin);
 
     const apiRequest = new Request(apiUrl, {
       method: request.method,
