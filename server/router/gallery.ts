@@ -1,8 +1,6 @@
 import { GalleryService } from "~/services/gallery.service.ts";
 import type { Gallery } from "~/types/gallery.ts";
 
-const DEV = Deno.env.get("DEV_MODE");
-
 export class GalleryHandler {
   private galleryService: GalleryService;
 
@@ -29,7 +27,7 @@ export class GalleryHandler {
           return this.create(request);
         case "DELETE":
           if (id) {
-            return this.remove(id);
+            return this.remove(request, id);
           }
           break;
       }
@@ -102,13 +100,19 @@ export class GalleryHandler {
     return new Response(JSON.stringify(record), { status: 201, headers: { "Content-Type": "application/json" } });
   }
 
-  private async remove(id: string): Promise<Response> {
-    if (!DEV) {
-      return new Response(JSON.stringify({ error: "Access Denied" }), { status: 403, headers: { "Content-Type": "application/json" } });
+  private async remove(request: Request, id: string): Promise<Response> {
+    const authHeader = request.headers.get("authorization");
+    if (!authHeader) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: { "Content-Type": "application/json" } });
     }
 
-    await this.galleryService.remove(id);
-    return new Response(JSON.stringify({ status: "ok" }), { status: 204, headers: { "Content-Type": "application/json" } });
+    const [scheme, token] = authHeader.split(" ");
+    if (scheme !== "Bearer" || !token) {
+      return new Response(JSON.stringify({ error: "Invalid authorization scheme" }), { status: 401, headers: { "Content-Type": "application/json" } });
+    }
+
+    await this.galleryService.remove(id, token);
+    return new Response(null, { status: 204, headers: { "Content-Type": "application/json" } });
   }
 
   private async addLike(request: Request, id: string): Promise<Response> {

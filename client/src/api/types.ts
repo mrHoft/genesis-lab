@@ -1,4 +1,5 @@
-import { type TFractalType } from '~/data/fractal';
+import type { TFractalType } from '~/data/fractal';
+import type { TPaletteName } from '~/data/palette';
 
 export interface User {
   id: string,
@@ -14,6 +15,8 @@ export interface GalleryRecord {
   thumbnail: string
   props: FractalData
   likes: string[]
+  version?: number
+  created_at: number
 }
 
 export interface FractalData {
@@ -23,7 +26,7 @@ export interface FractalData {
   scale: number
   x: number
   y: number
-  palette: number
+  palette: TPaletteName
   invert: boolean
   fill: boolean
 }

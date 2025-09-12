@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { Mandelbrot } from 'ui/mandelbrot/mandelbrot';
+import { Fractal } from '~/app/components/fractal/fractal';
 
 @Component({
   selector: 'app-generator',
-  imports: [Mandelbrot],
+  imports: [Fractal],
   templateUrl: './generator.html',
   styleUrl: './generator.css'
 })

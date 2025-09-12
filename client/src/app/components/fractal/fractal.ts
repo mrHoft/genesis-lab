@@ -1,8 +1,9 @@
 import { Component, effect, signal, inject, afterNextRender } from '@angular/core';
+
 import { createThumbnail } from '~/app/utils/thumbnail';
 import { ITERATIONS } from '~/data/const';
 import { fractals, fractalTypes, type TFractalType } from '~/data/fractal';
-import { palette, type TPalette } from '~/data/palette';
+import { palette, paletteTypes, type TPalette, type TPaletteName } from '~/data/palette';
 import { GalleryService } from '~/api/gallery.service';
 import type { FractalData } from '~/api/types';
 
@@ -13,18 +14,18 @@ const defaultFractal: FractalData = {
   scale: 3,
   x: -0.5,
   y: 0,
-  palette: 0,
+  palette: 'ocean',
   invert: false,
   fill: false
 }
 
 @Component({
-  selector: 'app-mandelbrot',
+  selector: 'app-fractal',
   standalone: true,
-  templateUrl: './mandelbrot.html',
-  styleUrl: './mandelbrot.css'
+  templateUrl: './fractal.html',
+  styleUrl: './fractal.css'
 })
-export class Mandelbrot {
+export class Fractal {
   readonly width = 512;
   readonly height = 512;
   readonly max = ITERATIONS
@@ -37,7 +38,8 @@ export class Mandelbrot {
   private timer = 0
   readonly fractalData = signal<FractalData>(defaultFractal)
   readonly fractalName = signal<string>(fractals[defaultFractal.fractal].name);
-  readonly colorPalettes: TPalette[]
+  readonly paletteTypes = paletteTypes
+  readonly palette: Record<TPaletteName, TPalette>
   protected thumbnail = signal('')
   readonly fractalBtns = fractalTypes.map(name => ({ id: name, icon: fractals[name].icon }))
   readonly renderTrigger = signal(0);
@@ -45,14 +47,10 @@ export class Mandelbrot {
   private galleryService = inject(GalleryService)
 
   constructor() {
-    this.colorPalettes = [
-      palette.ocean(),
-      palette.fire(),
-      palette.forest(),
-      palette.pastel(),
-      palette.rainbow(),
-      palette.grayscale()
-    ]
+    this.palette = paletteTypes.reduce<Record<string, TPalette>>((acc, key) => {
+      acc[key] = palette[key]()
+      return acc
+    }, {})
 
     afterNextRender(() => {
       this.initializeCanvas();
@@ -83,8 +81,8 @@ export class Mandelbrot {
     this.renderTrigger.update(v => v + 1);
   }
 
-  public handlePalette(index: number) {
-    this.fractalData.update(data => ({ ...data, palette: index }));
+  public handlePalette(name: TPaletteName) {
+    this.fractalData.update(data => ({ ...data, palette: name }));
     this.renderTrigger.update(v => v + 1);
   }
 
@@ -164,7 +162,18 @@ export class Mandelbrot {
   }
 
   public handleSave() {
-    const props: FractalData = { ...this.fractalData() }
+    const data = this.fractalData()
+    const props: FractalData = {
+      fractal: data.fractal,
+      p1: data.p1,
+      p2: data.p2,
+      scale: Math.floor(data.scale * 1000),
+      x: Math.floor(data.x * 1000),
+      y: Math.floor(data.y * 1000),
+      palette: data.palette,
+      invert: data.invert,
+      fill: data.fill
+    }
     console.log(props)
 
     const thumbnail = createThumbnail(this.imageData, 32, 32)
@@ -178,8 +187,8 @@ export class Mandelbrot {
   }
 
   private renderFractal(): void {
-    const { fractal, scale, p1, p2, x: centerX, y: centerY, palette: paletteIndex, invert, fill } = this.fractalData();
-    const palette = this.colorPalettes[paletteIndex];
+    const { fractal, scale, p1, p2, x: centerX, y: centerY, palette: paletteName, invert, fill } = this.fractalData();
+    const palette = this.palette[paletteName];
     const fractalFn = fractals[fractal].fn;
 
     for (let y = 0; y < this.height; y++) {

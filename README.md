@@ -10,9 +10,8 @@ A service to create, share, view and like pictures generated based on mathematic
   - Auth by token or by credentials.
   - User savings and global gallery.
 2. Generation:
-  - Mandelbrot Set Rendering: accurate implementation of the Mandelbrot fractal algorithm
   - Interactive Zooming: zoom in to explore intricate details or zoom out for a broader view
-  - Multiple Color Palettes: cycle through several visually appealing color schemes
+  - Multiple Color Palettes: several pallets to visually appealing color schemes
   - Responsive Design: clean UI with a dark/light theme that highlights the fractal beauty
   - HSV to RGB color conversion for smooth gradients
   - Pure TypeScript/JavaScript: no external libraries
@@ -40,18 +39,12 @@ The Mandelbrot set is created by iterating the function f(z) = z² + c for compl
 ```markdown
 project/
 ├── server/
+│   ├── db/migrations/  # Database scheme
 │   ├── middleware/
-│   │   ├── cors.ts
-│   │   └── static.ts
-│   ├── router/
-│   │   └── router.ts
-│   └── server.ts
+│   ├── router/         # Endpoint route handlers
+│   ├── services/       # Endpoint logic
+│   └── server.ts       # Entry point
 └── client/
-    └── dist/
-        ├── index.html
-        ├── favicon.ico
-        └── assets/
-            ├── js/
-            ├── css/
-            └── images/
+    ├── src/             # Angular source
+    └── dist/            # Bundled static files
 ```

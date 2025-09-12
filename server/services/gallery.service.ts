@@ -24,8 +24,8 @@ export class GalleryService {
     const params: string[] = [limit.toString(), offset.toString()];
 
     if (userId) {
-      whereClause = `WHERE user_id = $${params.length}`;
       params.push(userId);
+      whereClause = `WHERE user_id = $${params.length}`;
     }
 
     const recordsQuery = `
@@ -37,7 +37,7 @@ export class GalleryService {
 
     const countQuery = `
       SELECT COUNT(*) FROM gallery
-      ${whereClause}
+      ${userId ? 'WHERE user_id = $1' : ''}
     `;
 
     const [recordsResult, countResult] = await Promise.all([
@@ -73,19 +73,7 @@ export class GalleryService {
     return result[0];
   }
 
-  async remove(id: string): Promise<void> {
-    await executeQuery(
-      "DELETE FROM gallery WHERE id = $1",
-      [id]
-    );
-  }
-
-  async addLike(id: string, token: string): Promise<Gallery | null> {
-    const gallery = await this.findOneById(id);
-    if (!gallery) {
-      return null;
-    }
-
+  async remove(id: string, token: string): Promise<void> {
     let userId = 'unknown'
     try {
       const payload = await JwtUtils.verify(token, JWT_TOKEN_KEY!);
@@ -93,15 +81,29 @@ export class GalleryService {
     } catch (error) {
       throw ErrorResponse.fromError(error, 401);
     }
-    if (gallery.likes.includes(userId)) {
-      return gallery;
+    await executeQuery(
+      "DELETE FROM gallery WHERE id = $1 AND user_id = $2",
+      [id, userId]
+    );
+  }
+
+  async addLike(id: string, token: string): Promise<Gallery | null> {
+    let userId = 'unknown'
+    try {
+      const payload = await JwtUtils.verify(token, JWT_TOKEN_KEY!);
+      userId = payload.id
+    } catch (error) {
+      throw ErrorResponse.fromError(error, 401);
     }
 
     const result = await executeQuery<Gallery>(
       `UPDATE gallery
-       SET likes = array_append(likes, $2)
-       WHERE id = $1
-       RETURNING *`,
+     SET likes = CASE
+       WHEN $2 = ANY(likes) THEN array_remove(likes, $2)
+       ELSE array_append(likes, $2)
+     END
+     WHERE id = $1
+     RETURNING *`,
       [id, userId]
     );
 

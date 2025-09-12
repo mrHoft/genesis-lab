@@ -31,11 +31,11 @@
 
   <label>Color</label>
   <div class="btns">
-    @for(palette of colorPalettes; track $index){
-    @let from=palette[0];
-    @let to=palette[max-1];
+    @for(key of paletteTypes; track key){
+    @let from=palette[key][0];
+    @let to=palette[key][max-1];
     <div class="color_btn" [style]="`--from: rgb(${from.r},${from.g},${from.b}); --to: rgb(${to.r},${to.g},${to.b});`"
-      (click)="handlePalette($index)">
+      (click)="handlePalette(key)">
     </div>
     }
   </div>

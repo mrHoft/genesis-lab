@@ -2,14 +2,14 @@
   <img src="./assets/user.svg" alt="avatar" />
 </div>
 
-@if(menuOpen()){
-<ul class="menu">
+<ul class="menu" [class.open]="menuOpen()">
   <li class="menu__title">{{title()}}</li>
   @for(item of menu; track item.id){
+  @if(item.visible()){
   <li class="menu__item" (click)="item.action()">
     <img [src]="item.icon" [alt]="item.id" />
     {{item.title}}
   </li>
   }
+  }
 </ul>
-}

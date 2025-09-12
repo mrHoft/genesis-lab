@@ -11,12 +11,9 @@ import { errorToMessage } from './api-message';
 export class GalleryService {
   private userStorage = new UserStorage();
   private messageService = inject(MessageService)
-  private gallerySignal = signal<GalleryRecord[]>([]);
   private http = inject(HttpClient);
 
-  public gallery = this.gallerySignal.asReadonly();
-
-  public add(body: Omit<GalleryRecord, 'id' | 'likes'>) {
+  public add(body: Omit<GalleryRecord, 'id' | 'likes' | 'created_at'>) {
     const token = this.userStorage.user?.accessToken;
     return this.http.post<GalleryRecord>(`${API_URL}/gallery`, body, {
       headers: token ? { Authorization: `Bearer ${token}` } : {}
@@ -41,30 +38,29 @@ export class GalleryService {
     return this.http.get<GalleryResponse>(`${API_URL}/gallery/?${params.toString()}`);
   }
 
-  public like(id: string | number): void {
+  public like(id: string | number) {
     const token = this.userStorage.user?.accessToken;
 
-    this.http.post<GalleryRecord>(`${API_URL}/gallery/${id}/like`, null, {
+    return this.http.post<GalleryRecord>(`${API_URL}/gallery/${id}/like`, null, {
       headers: token ? { Authorization: `Bearer ${token}` } : {}
     }).pipe(
-      tap(record => {
-        this.updateGallery([record])
-      }),
       catchError(error => {
         this.messageService.show(errorToMessage(error), 'error')
         throw error;
       })
-    ).subscribe();
+    );
   }
 
-  private updateGallery(galleryData: GalleryRecord[]): void {
-    this.gallerySignal.update(prev => {
-      return prev.map(record => {
-        for (const data of galleryData) {
-          if (record.id === data.id) return data
-        }
-        return record
+  public remove(id: string | number) {
+    const token = this.userStorage.user?.accessToken;
+
+    return this.http.delete<GalleryRecord>(`${API_URL}/gallery/${id}`, {
+      headers: token ? { Authorization: `Bearer ${token}` } : {}
+    }).pipe(
+      catchError(error => {
+        this.messageService.show(errorToMessage(error), 'error')
+        throw error;
       })
-    });
+    );
   }
 }

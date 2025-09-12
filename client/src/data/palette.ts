@@ -26,6 +26,7 @@ function hsvToRgb(h: number, s: number, v: number): { r: number; g: number; b: n
 
 export type TPalette = { r: number; g: number; b: number }[]
 export type TPaletteName = 'rainbow' | 'fire' | 'ocean' | 'pastel' | 'forest' | 'grayscale'
+export const paletteTypes: TPaletteName[] = ['ocean', 'fire', 'forest', 'grayscale', 'rainbow', 'pastel'] as const;
 
 export const palette: Record<TPaletteName, (() => TPalette)> = {
   rainbow: () => {

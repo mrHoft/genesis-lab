@@ -28,13 +28,17 @@
   right: 0;
   top: 3rem;
   background-color: var(--color10);
-  animation: slide 0.25s ease-out;
+  transform: translateX(100%);
   z-index: 100;
+}
+
+.menu.open {
+  animation: slide 0.25s ease-out forwards;
 }
 
 @keyframes slide {
   from {
-    transform: translateX(100%)
+    transform: translateX(100%);
   }
 
   to {
