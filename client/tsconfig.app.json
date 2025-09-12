@@ -7,8 +7,7 @@
     "types": []
   },
   "include": [
-    "src/**/*.ts",
-    "src/app/utils/fractal._ts"
+    "src/**/*.ts"
   ],
   "exclude": [
     "src/**/*.spec.ts"

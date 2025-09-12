@@ -1,1 +1,50 @@
-<app-fractal />
+<canvas #canvas [width]="width" [height]="height" (click)="handleCanvasClick($event)"
+  (wheel)="handleWheel($event)"></canvas>
+
+<div class="controls">
+  @let data=fractalData();
+  <label>
+    Fractal: {{fractalName()}}
+  </label>
+  <div class="btns">
+    @for(item of fractalBtns; track item.id){
+    <img class="control_btn" [src]="item.icon" [alt]="item.id" (click)="handleFractal(item.id)" [title]="item.id" />
+    }
+    <img class="control_btn" src="./assets/cycle.svg" alt="reset" (click)="resetView()" title="Reset" />
+  </div>
+
+  <label>
+    <div>Fractional Power: {{ data.p1 }}</div>
+    <input type="range" min="0.5" max="4" step="0.5" [value]="data.p1"
+      (input)="handleFractionalPower($event.target.value)">
+  </label>
+  <label>
+    <div>Asymmetrical Power: {{ data.p2 }}</div>
+    <input type="range" min="0.5" max="4" step="0.5" [value]="data.p2"
+      (input)="handleAsymmetricalPower($event.target.value)">
+  </label>
+
+  <label>Color</label>
+  <div class="btns">
+    @for(key of paletteTypes; track key){
+    @let from=palette[key][0];
+    @let to=palette[key][max-1];
+    <div class="color_btn" [style]="`--from: rgb(${from.r},${from.g},${from.b}); --to: rgb(${to.r},${to.g},${to.b});`"
+      (click)="handlePalette(key)">
+    </div>
+    }
+  </div>
+
+  <div class="btns">
+    <label>
+      <img class="control_btn" src="./assets/invert.svg" alt="invert" title="Invert" />
+      <input style="display: none;" type="checkbox" (change)="handleInvert($event.target.checked)">
+    </label>
+    <label>
+      <img class="control_btn" src="./assets/fill.svg" alt="fill" title="Fill" />
+      <input style="display: none;" type="checkbox" (change)="handleFill($event.target.checked)">
+    </label>
+  </div>
+
+  <button class="button" (click)="handleSave()">Save</button>
+</div>
