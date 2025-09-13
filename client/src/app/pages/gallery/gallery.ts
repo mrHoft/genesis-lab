@@ -1,8 +1,8 @@
 import { Component, inject, signal, computed, HostListener } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 import { GalleryService } from '~/api/gallery.service';
-import type { GalleryRecord, FractalData } from '~/api/types';
+import type { GalleryRecord, FractalData, GalleryResponse } from '~/api/types';
 import { Loader } from '~/app/components/loader/loader';
 import { UserService } from '~/api/user.service';
 import { Fractal } from '~/app/utils/fractal';
@@ -15,6 +15,7 @@ import { GALLERY_IMAGE_SIZE } from '~/data/const';
   styleUrl: './gallery.css'
 })
 export class PageGallery {
+  private route = inject(ActivatedRoute);
   protected router = inject(Router)
   private fractal: Fractal
   private userService = inject(UserService);
@@ -32,7 +33,17 @@ export class PageGallery {
   }
 
   ngOnInit() {
-    this.loadNextPage();
+    // this.loadNextPage();  // Without route resolver
+    this.route.data.subscribe(data => {
+      const response = data['galleryFirstPage'] as GalleryResponse
+      if (response) {
+        this.allRecords.update(current => [...current, ...response.records]);
+        this.totalRecords.set(response.pagination.total);
+        this.currentPage.set(response.pagination.page + 1);
+
+        setTimeout(() => this.renderFractals(response.records));
+      }
+    });
   }
 
   @HostListener('window:scroll')

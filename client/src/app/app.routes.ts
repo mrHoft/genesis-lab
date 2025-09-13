@@ -1,20 +1,32 @@
 import { Routes } from '@angular/router';
-import { PageLogin } from './pages/login/login';
-import { PageProfile } from './pages/profile/profile';
-import { PageGallery } from './pages/gallery/gallery';
-import { PageGenerator } from './pages/generator/generator';
-import { PageUserSavings } from './pages/savings/savings';
-import { PageNotFound } from './pages/not-found/not-found';
-import { PageAbout } from './pages/about/about';
+import { GeneratorResolver } from './pages/generator/generator.resolver';
+import { GalleryResolver } from './pages/gallery/gallery.resolver';
+import { AuthGuard } from '~/api/auth.guard';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/gallery', pathMatch: "full" },
-  { path: 'login', component: PageLogin },
-  { path: 'about', component: PageAbout },
-  { path: 'profile', component: PageProfile },
-  { path: 'gallery', component: PageGallery },
-  { path: 'savings', component: PageUserSavings },
-  { path: 'generator', component: PageGenerator },
-  { path: 'generator/:id', component: PageGenerator },
-  { path: '**', component: PageNotFound }
+  { path: 'login', loadComponent: () => import('./pages/login/login').then(m => m.PageLogin) },
+  { path: 'about', loadComponent: () => import('./pages/about/about').then(m => m.PageAbout) },
+  {
+    path: 'profile',
+    loadComponent: () => import('./pages/profile/profile').then(m => m.PageProfile),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'savings',
+    loadComponent: () => import('./pages/savings/savings').then(m => m.PageUserSavings),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'gallery',
+    loadComponent: () => import('./pages/gallery/gallery').then(m => m.PageGallery),
+    resolve: { galleryFirstPage: GalleryResolver }
+  },
+  { path: 'generator', loadComponent: () => import('./pages/generator/generator').then(m => m.PageGenerator) },
+  {
+    path: 'generator/:id',
+    loadComponent: () => import('./pages/generator/generator').then(m => m.PageGenerator),
+    resolve: { fractalRecord: GeneratorResolver }
+  },
+  { path: '**', loadComponent: () => import('./pages/not-found/not-found').then(m => m.PageNotFound) }
 ];

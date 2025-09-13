@@ -7,7 +7,7 @@ export const passwordValidator: ValidatorFn = (control: AbstractControl) => {
     return null;
   }
 
-  const errors: any = {};
+  const errors: Record<string, unknown> = {};
 
   if (value.length < 6) {
     errors['minlength'] = { requiredLength: 6, actualLength: value.length };

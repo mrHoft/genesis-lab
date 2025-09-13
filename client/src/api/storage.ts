@@ -33,11 +33,11 @@ export default class Storage {
 
   public push<T = TIndexed>(key: string, value: T) {
     const prev = this.getValue(key) as T | undefined;
-    if (!prev) {
-      this.setValue(key, [value]);
-    } else {
+    if (prev) {
       if (!Array.isArray(prev)) throw new Error(`${key} is not an array`);
       this.setValue(key, [...prev, value]);
+    } else {
+      this.setValue(key, [value]);
     }
     this.emit();
   }
@@ -57,7 +57,7 @@ export default class Storage {
   }
 
   protected emit() {
-    if (typeof window !== 'undefined') {
+    if (!globalThis.window) {
       localStorage.setItem(Storage.STORE_NAME, JSON.stringify(this._state));
     }
   }

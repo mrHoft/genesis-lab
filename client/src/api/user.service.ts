@@ -92,7 +92,7 @@ export class UserService {
       catchError(error => {
         console.error('Failed to fetch user after token refresh:', error);
         this.messageService.show('Failed to fetch user after token refresh', 'error')
-        return of(undefined);
+        return of();
       })
     ).subscribe();
   }

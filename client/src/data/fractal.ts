@@ -2,7 +2,7 @@ import { ITERATIONS } from '~/data/const';
 
 type FractalFn = (x: number, y: number, p1?: number, p2?: number) => number;
 
-export type TFractalType = 'mandelbrot' | 'julia' | 'burningShip' | 'newton' | 'strangeAttractor' | 'lyapunov' | 'ifs' | 'plasma' | 'pickover'
+export type TFractalType = 'mandelbrot' | 'julia' | 'burningShip' | 'newton' | 'strangeAttractor'
 
 export const fractalTypes: TFractalType[] = ['mandelbrot', 'julia', 'burningShip', 'newton'] as const;
 
@@ -139,119 +139,6 @@ export const fractals: Record<TFractalType, { name: string, fn: FractalFn, icon:
         }
       }
       return count;
-    },
-    icon: ''
-  },
-
-  lyapunov: {
-    name: 'Lyapunov Fractals',
-    fn: (x: number, y: number, p1: number = 3.5, p2: number = 0.5): number => {
-      const sequence = "AB";
-      const length = 100;
-      let product = 1;
-      let rn = 0;
-      let yn = 0.5;
-
-      for (let i = 0; i < length; i++) {
-        rn = sequence.charCodeAt(i % sequence.length) === 65 ? p1 : p2;
-        product *= Math.abs(rn * (1 - 2 * yn));
-        yn = rn * yn * (1 - yn);
-      }
-
-      const lyapunovExp = Math.log(Math.abs(product)) / length;
-      return Math.min(Math.max(lyapunovExp, -10), 10);
-    },
-    icon: ''
-  },
-
-  ifs: {
-    name: 'Iterated Function Systems',
-    fn: (x: number, y: number, p1: number = 0.5, p2: number = 0.5): number => {
-      const transformations = [
-        { a: 0.85, b: 0.04, c: -0.04, d: 0.85, e: 0, f: 1.6 },
-        { a: -0.15, b: 0.28, c: 0.26, d: 0.24, e: 0, f: 0.44 },
-        { a: 0.2, b: -0.26, c: 0.23, d: 0.22, e: 0, f: 1.6 },
-        { a: 0, b: 0, c: 0, d: 0.16, e: 0, f: 0 }
-      ];
-
-      let zx = 0;
-      let zy = 0;
-      let count = 0;
-
-      for (let i = 0; i < 1000; i++) {
-        const r = Math.random();
-        const t = transformations[r < 0.01 ? 3 : r < 0.86 ? 0 : r < 0.93 ? 1 : 2];
-
-        const newZx = t.a * zx + t.b * zy + t.e;
-        const newZy = t.c * zx + t.d * zy + t.f;
-
-        zx = newZx;
-        zy = newZy;
-
-        if (i > 100) {
-          const dist = Math.sqrt((zx - x) * (zx - x) + (zy - y) * (zy - y));
-          if (dist < p1 * 0.1) count++;
-        }
-      }
-      return count * p2;
-    },
-    icon: ''
-  },
-
-  plasma: {
-    name: 'Plasma (Noise-Based)',
-    fn: (x: number, y: number, p1: number = 1, p2: number = 1): number => {
-      let value = 0;
-      const size = 1;
-      let initialSize = size;
-
-      while (initialSize > 0.01) {
-        const x1 = Math.floor(x / initialSize) * initialSize;
-        const y1 = Math.floor(y / initialSize) * initialSize;
-        const x2 = x1 + initialSize;
-        const y2 = y1 + initialSize;
-
-        const fade = (t: number) => t * t * t * (t * (t * 6 - 15) + 10);
-        const dx = fade((x - x1) / initialSize);
-        const dy = fade((y - y1) / initialSize);
-
-        const n1 = Math.sin(x1 * p1 + y1 * p2);
-        const n2 = Math.sin(x2 * p1 + y1 * p2);
-        const n3 = Math.sin(x1 * p1 + y2 * p2);
-        const n4 = Math.sin(x2 * p1 + y2 * p2);
-
-        value += (n1 * (1 - dx) + n2 * dx) * (1 - dy) + (n3 * (1 - dx) + n4 * dx) * dy;
-        initialSize /= 2;
-      }
-
-      return Math.abs(value) * 50;
-    },
-    icon: ''
-  },
-
-  pickover: {
-    name: 'Pickover Stalks (Bioprocess)',
-    fn: (x: number, y: number, p1: number = 2, p2: number = 2): number => {
-      let zx = 0;
-      let zy = 0;
-      let iter = 0;
-
-      while (iter < ITERATIONS) {
-        const sinX = Math.sin(zx);
-        const cosY = Math.cos(zy);
-
-        const newZx = Math.sin(p1 * zy) + Math.exp(p2 * cosY);
-        const newZy = Math.sin(p1 * zx) + Math.exp(p2 * sinX);
-
-        if (Math.abs(newZx - x) < 0.1 && Math.abs(newZy - y) < 0.1) {
-          return iter;
-        }
-
-        zx = newZx;
-        zy = newZy;
-        iter++;
-      }
-      return ITERATIONS;
     },
     icon: ''
   }
