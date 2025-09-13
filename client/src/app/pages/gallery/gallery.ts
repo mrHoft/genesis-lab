@@ -1,8 +1,12 @@
 import { Component, inject, signal, computed, HostListener } from '@angular/core';
+import { Router } from '@angular/router';
+
 import { GalleryService } from '~/api/gallery.service';
-import type { GalleryRecord } from '~/api/types';
+import type { GalleryRecord, FractalData } from '~/api/types';
 import { Loader } from '~/app/components/loader/loader';
 import { UserService } from '~/api/user.service';
+import { Fractal } from '~/app/utils/fractal';
+import { GALLERY_IMAGE_SIZE } from '~/data/const';
 
 @Component({
   selector: 'app-gallery',
@@ -11,6 +15,8 @@ import { UserService } from '~/api/user.service';
   styleUrl: './gallery.css'
 })
 export class PageGallery {
+  protected router = inject(Router)
+  private fractal: Fractal
   private userService = inject(UserService);
   private galleryService = inject(GalleryService);
   private currentPage = signal(1);
@@ -19,13 +25,18 @@ export class PageGallery {
   private totalRecords = signal(0);
 
   public galleryRecords = computed(() => this.allRecords());
+  public size = GALLERY_IMAGE_SIZE
 
-  ngOnInit(): void {
+  constructor() {
+    this.fractal = new Fractal()
+  }
+
+  ngOnInit() {
     this.loadNextPage();
   }
 
   @HostListener('window:scroll')
-  public onScroll(): void {
+  public onScroll() {
     const threshold = 100;
     const position = window.scrollY + window.innerHeight;
     const height = document.body.scrollHeight;
@@ -35,7 +46,7 @@ export class PageGallery {
     }
   }
 
-  public loadNextPage(): void {
+  public loadNextPage() {
     const total = this.totalRecords()
     if (this.loading() || (total && this.allRecords().length >= total)) return;
 
@@ -46,11 +57,32 @@ export class PageGallery {
         this.totalRecords.set(response.pagination.total);
         this.currentPage.update(page => page + 1);
         this.loading.set(false);
+
+        setTimeout(() => this.renderFractals(response.records));
       },
       error: () => {
         this.loading.set(false);
       }
     });
+  }
+
+  private renderFractals(records: GalleryRecord[]) {
+    const canvases = document.querySelectorAll('canvas');
+    records.forEach((record, index) => {
+      const canvas = canvases[canvases.length - records.length + index];
+      if (canvas) {
+        this.renderFractalToCanvas(canvas, record.props);
+      }
+    });
+  }
+
+  private renderFractalToCanvas(canvas: HTMLCanvasElement, props: FractalData) {
+    const imageData = this.fractal.render(props, this.size, this.size);
+
+    const ctx = canvas.getContext('2d');
+    if (ctx) {
+      ctx.putImageData(imageData, 0, 0);
+    }
   }
 
   public isLiked(likes: string[]) {

@@ -15,5 +15,6 @@ export const routes: Routes = [
   { path: 'gallery', component: PageGallery },
   { path: 'savings', component: PageUserSavings },
   { path: 'generator', component: PageGenerator },
+  { path: 'generator/:id', component: PageGenerator },
   { path: '**', component: PageNotFound }
 ];

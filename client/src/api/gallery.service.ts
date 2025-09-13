@@ -35,7 +35,21 @@ export class GalleryService {
       ...(userId && { user_id: userId })
     });
 
-    return this.http.get<GalleryResponse>(`${API_URL}/gallery/?${params.toString()}`);
+    return this.http.get<GalleryResponse>(`${API_URL}/gallery/?${params.toString()}`).pipe(
+      catchError(error => {
+        this.messageService.show(errorToMessage(error), 'error')
+        throw error;
+      })
+    );
+  }
+
+  public getOne(id: number) {
+    return this.http.get<GalleryRecord>(`${API_URL}/gallery/${id}`).pipe(
+      catchError(error => {
+        this.messageService.show(errorToMessage(error), 'error')
+        throw error;
+      })
+    );
   }
 
   public like(id: string | number) {

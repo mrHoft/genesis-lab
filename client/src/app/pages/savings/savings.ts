@@ -1,4 +1,6 @@
-import { Component, inject, signal, computed, HostListener } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
+import { Router } from '@angular/router';
+
 import { GalleryService } from '~/api/gallery.service';
 import type { GalleryRecord } from '~/api/types';
 import { Loader } from '~/app/components/loader/loader';
@@ -19,6 +21,7 @@ export class PageUserSavings {
   protected loading = signal(false);
   protected savings = signal<GalleryRecord[]>([]);
   private totalRecords = signal(0);
+  protected router = inject(Router)
 
   ngOnInit(): void {
     this.loadPage(1);

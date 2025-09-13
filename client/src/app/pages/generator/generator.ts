@@ -1,4 +1,5 @@
 import { Component, effect, signal, inject, afterNextRender } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { createThumbnail } from '~/app/utils/thumbnail';
 import { ITERATIONS } from '~/data/const';
@@ -30,7 +31,6 @@ export class PageGenerator {
   readonly width = 512;
   readonly height = 512;
   readonly max = ITERATIONS
-  readonly fillIndex = Math.floor(ITERATIONS / 4)
 
   private canvas!: HTMLCanvasElement;
   private ctx!: CanvasRenderingContext2D;
@@ -45,14 +45,26 @@ export class PageGenerator {
 
   private galleryService = inject(GalleryService)
   private fractal: Fractal
+  private router = inject(Router)
 
   constructor() {
-    this.fractal = new Fractal(this.width, this.height)
+    this.fractal = new Fractal()
     this.palette = this.fractal.palette
 
     afterNextRender(() => {
       this.initializeCanvas();
-      this.renderFractal();
+
+      const id = this.getRouteData()
+      if (id) {
+        this.galleryService.getOne(id).subscribe({
+          next: (record => {
+            this.fractalData.set(record.props)
+            this.renderFractal();
+          })
+        })
+      } else {
+        this.renderFractal();
+      }
     });
 
     effect(() => {
@@ -61,6 +73,11 @@ export class PageGenerator {
         this.renderFractal();
       }
     });
+  }
+
+  private getRouteData(): number | null {
+    const parts = this.router.url.split('/');
+    return parts.length > 2 && parts[1] === 'generator' ? Number(parts[2]) : null;
   }
 
   public zoomIn(): void {
@@ -166,7 +183,7 @@ export class PageGenerator {
   }
 
   private renderFractal(): void {
-    const imageData = this.fractal.render(this.fractalData())
+    const imageData = this.fractal.render(this.fractalData(), this.width, this.height)
     this.ctx.putImageData(imageData, 0, 0);
   }
 }
