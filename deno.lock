@@ -3939,7 +3939,10 @@
             "npm:@angular/forms@^20.1.0",
             "npm:@angular/platform-browser@^20.1.0",
             "npm:@angular/router@^20.1.0",
+            "npm:@eslint/js@^9.31.0",
             "npm:@types/jasmine@5.1",
+            "npm:eslint-plugin-unicorn@^59.0.1",
+            "npm:eslint@^9.31.0",
             "npm:jasmine-core@5.8",
             "npm:karma-chrome-launcher@3.2",
             "npm:karma-coverage@2.2",
@@ -3948,6 +3951,7 @@
             "npm:karma@6.4",
             "npm:rxjs@7.8",
             "npm:tslib@^2.3.0",
+            "npm:typescript-eslint@^8.37.0",
             "npm:typescript@~5.8.2"
           ]
         }

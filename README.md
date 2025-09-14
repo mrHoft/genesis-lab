@@ -4,7 +4,7 @@ This project demonstrates how mathematical functions can generate complex and vi
 
 <div align="center">
 
-![deno](https://badge-service.deno.dev/plain?title=Deno&icon=deno&value=2.4)
+![deno](https://badge-service.deno.dev/plain?title=Deno&icon=deno&value=2.5)
 ![angular](https://badge-service.deno.dev/plain?title=Angular&icon=angular&value=20.1)
 
 </div>
@@ -30,29 +30,26 @@ This project demonstrates how mathematical functions can generate complex and vi
 As an example, the Mandelbrot set is created by iterating the function f(z) = z² + c for complex numbers. Each point on the canvas is colored based on how quickly the iteration diverges (if at all), creating the intricate patterns characteristic of fractals.
 
 ### Deno server
-✅ Serve API routes under /api/*
-
-✅ Serve static files from ../client/dist/
-
-✅ Serve index.html for all non-API routes (SPA support)
-
-✅ Handle cors policy
-
-✅ Apply appropriate caching headers
-
-✅ Support client-side routing for Angular app
+- Serve API routes under /api/*
+- Serve static files from ../client/dist/
+- Serve index.html for all non-API routes (SPA support)
+- Handle cors policy
+- Apply appropriate caching headers
+- Support client-side routing for Angular app
 
 ### File structure
 ```markdown
 project/
 ├── server/
-│   ├── db/migrations/  # Database scheme
+│   ├── db/migrations/   # Database scheme
 │   ├── middleware/
-│   ├── router/         # Endpoint route handlers
-│   ├── services/       # Endpoint logic
-│   └── server.ts       # Entry point
+│   ├── router/          # Endpoint route handlers
+│   ├── services/        # Endpoint logic
+│   └── server.ts        # Entry point
 └── client/
-    ├── src/             # Angular source
+    ├── src/             # Source files
+    │   ├── api/         # Api services
+    │   └── app/         # Angular application
     └── dist/            # Bundled static files (used by server)
 ```
 
@@ -64,7 +61,7 @@ project/
 4. Install Postgres if not exist (depend of your system)
 5. Define DB_HOST and DB_PORT depend of your database
 6. Build client static files (`npm run client:build`)
-7. Start server (`npm run server`)
+7. Start server (`deno task server`)
 8. Application will be available on http://localhost:3000 (by default)
 
 ### Core focus areas

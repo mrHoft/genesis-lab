@@ -57,7 +57,7 @@ export default class Storage {
   }
 
   protected emit() {
-    if (!globalThis.window) {
+    if (typeof globalThis.window === 'object') {
       localStorage.setItem(Storage.STORE_NAME, JSON.stringify(this._state));
     }
   }

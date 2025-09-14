@@ -1,11 +1,12 @@
 <div class="login">
-  <form class="login__form" [formGroup]="form" (ngSubmit)="onSubmit()">
-    <h3 class="login__form_header">Please authorize</h3>
+  <form class="login__form" [formGroup]="form" (ngSubmit)="handleSubmit()">
+    <h3 class="title">Please authorize</h3>
     <input formControlName="login" placeholder="login*" required (input)="clearError()" />
     <input formControlName="password" type="password" placeholder="password*" required (input)="clearError()" />
-    <div class="login__form_error">{{ errorMessage() }}</div>
-    <div class="login__form_btns">
+    <div class="form_error">{{ errorMessage() }}</div>
+    <div class="form_btns">
       <button type="submit" class="button" [disabled]="form.invalid">Log in</button>
     </div>
+    <div class="sign link" (click)="handleNewUser()">New user</div>
   </form>
 </div>

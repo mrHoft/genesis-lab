@@ -1,5 +1,12 @@
 {
   "cSpell.words": [
     "Hoft"
-  ]
+  ],
+  "deno.enable": false,
+  "deno.enablePaths": [
+    "server"
+  ],
+  "files.associations": {
+    "**/client/**/*.ts": "typescript",
+  }
 }

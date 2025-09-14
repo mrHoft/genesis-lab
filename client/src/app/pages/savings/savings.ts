@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, computed } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { GalleryService } from '~/api/gallery.service';
@@ -7,6 +7,7 @@ import { Loader } from '~/app/components/loader/loader';
 import { UserService } from '~/api/user.service';
 import { ModalService } from '~/app/components/modal';
 import { Confirmation, type TConfirmationProps } from '~/app/components/confirmation/confirmation';
+import { i18n } from '~/data/i18n.en'
 
 @Component({
   selector: 'app-savings',
@@ -22,6 +23,7 @@ export class PageUserSavings {
   protected savings = signal<GalleryRecord[]>([]);
   private totalRecords = signal(0);
   protected router = inject(Router)
+  protected messageNothing = computed<string[]>(() => i18n.noSavings.split('\n'))
 
   ngOnInit(): void {
     this.loadPage(1);

@@ -1,6 +1,8 @@
+@let data = savings();
+
 <h3 class="title">Savings</h3>
 <div>
-  @for (item of savings(); track item.id) {
+  @for (item of data; track item.id) {
   <div class="item" (click)="router.navigate([`/generator/${item.id}`])">
     <div>{{formatDate(item.created_at)}}</div>
     <img [src]="item.thumbnail" alt="thumbnail" width="32" height="32" />
@@ -14,6 +16,11 @@
     <img width="24" height="24" class="trash" src="./assets/trash.svg" alt="trash"
       (click)="$event.stopPropagation();handleRemove(item.id)" />
   </div>
+  }
+  @if(data.length===0){
+  @for(text of messageNothing(); track $index){
+  <p>{{text}}</p>
+  }
   }
   @if (loading()) {
   <app-loader />

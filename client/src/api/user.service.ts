@@ -6,7 +6,7 @@ import type { User } from './types';
 import { UserStorage } from './user.storage';
 import { API_URL } from './const';
 import { MessageService } from '~/app/components/message/message.service';
-import { errorToMessage } from './api-message';
+import { errorToMessage } from './message';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
@@ -17,6 +17,11 @@ export class UserService {
 
   public user = this.userSignal.asReadonly();
   public isAuthenticated = computed(() => this.user() !== undefined);
+
+  public logout() {
+    this.userSignal.set(undefined);
+    this.userStorage.user = undefined;
+  }
 
   public requestLogin(body: { login: string, password: string }) {
     return this.http.post<User>(`${API_URL}/user/login`, body).pipe(
@@ -39,6 +44,19 @@ export class UserService {
       tap(user => {
         this.updateAndStoreUser(user)
         this.messageService.show('User update successful')
+      }),
+      catchError(error => {
+        this.messageService.show(errorToMessage(error), 'error')
+        throw error;
+      })
+    );
+  }
+
+  public requestNew() {
+    return this.http.get<User>(`${API_URL}/user`).pipe(
+      tap(user => {
+        this.updateAndStoreUser(user)
+        this.messageService.show(`Created new user: ${user.name}`)
       }),
       catchError(error => {
         this.messageService.show(errorToMessage(error), 'error')

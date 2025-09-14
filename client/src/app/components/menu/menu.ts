@@ -33,6 +33,11 @@ export class Menu implements OnInit, OnDestroy {
     this.menuOpen.update(cur => !cur)
   }
 
+  protected handleLogout = () => {
+    this.userService.logout()
+    this.router.navigate(['/login'])
+  }
+
   protected title = () => this.userService.user()?.name
 
   protected menu = [
@@ -40,35 +45,35 @@ export class Menu implements OnInit, OnDestroy {
       id: 'login',
       title: 'Log in',
       icon: './assets/login.svg',
-      action: () => this.router.navigate(['/login']),
+      action: () => { this.router.navigate(['/login']) },
       visible: () => !this.userService.user()?.login
     },
     {
       id: 'logout',
       title: 'Log out',
       icon: './assets/logout.svg',
-      action: () => Promise.resolve(false),
+      action: this.handleLogout,
       visible: () => Boolean(this.userService.user()?.login)
     },
     {
       id: 'profile',
       title: 'Profile',
       icon: './assets/user.svg',
-      action: () => this.router.navigate(['/profile']),
+      action: () => { this.router.navigate(['/profile']) },
       visible: () => Boolean(this.userService.user())
     },
     {
       id: 'savings',
       title: 'Savings',
       icon: './assets/gallery.svg',
-      action: () => this.router.navigate(['/savings']),
+      action: () => { this.router.navigate(['/savings']) },
       visible: () => Boolean(this.userService.user())
     },
     {
       id: '404',
       title: 'Page 404',
       icon: './assets/about.svg',
-      action: () => this.router.navigate([`/${Math.random().toString(36).slice(2, 8)}`]),
+      action: () => { this.router.navigate([`/${Math.random().toString(36).slice(2, 8)}`]) },
       visible: () => true
     }
   ]

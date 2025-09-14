@@ -5,7 +5,7 @@ import type { GalleryRecord, GalleryResponse } from './types';
 import { API_URL } from './const';
 import { UserStorage } from './user.storage';
 import { MessageService } from '~/app/components/message/message.service';
-import { errorToMessage } from './api-message';
+import { errorToMessage } from './message';
 
 @Injectable({ providedIn: 'root' })
 export class GalleryService {
