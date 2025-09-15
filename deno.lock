@@ -3958,6 +3958,7 @@
       },
       "server": {
         "dependencies": [
+          "jsr:@db/postgres@*",
           "jsr:@std/assert@1"
         ]
       }
