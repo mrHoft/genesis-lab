@@ -1,4 +1,4 @@
-import { Pool } from "jsr:@db/postgres";
+import { Pool } from "postgres";
 import { dbConfig } from "./config.ts";
 
 export const pool = new Pool(dbConfig, 10);
@@ -11,5 +11,16 @@ export async function executeQuery<T>(query: string, params?: (string | undefine
     return result.rows;
   } finally {
     client.release();
+  }
+}
+
+export async function checkPoolHealth() {
+  try {
+    const client = await pool.connect();
+    await client.queryObject("SELECT 1");
+    client.release();
+    console.log("Database connection healthy");
+  } catch (error) {
+    console.error("Database connection failed:", error);
   }
 }

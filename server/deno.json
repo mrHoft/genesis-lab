@@ -5,7 +5,9 @@
   },
   "imports": {
     "@std/assert": "jsr:@std/assert@1",
-    "https://deno.land/std/": "https://deno.land/std@0.168.0/",
+    "server": "https://deno.land/std@0.168.0/http/server.ts",
+    "bcrypt": "https://deno.land/x/bcrypt@v0.4.1/mod.ts",
+    "postgres": "jsr:@db/postgres",
     "~/": "./"
   },
   "fmt": {

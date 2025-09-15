@@ -73,9 +73,10 @@ export class UserHandler {
     const body: CreateUserDto = await request.json();
 
     const user = await this.userService.login(body);
+    const tokens = await this.userService.generateTokens(user);
 
     const { password: _, ...userWithoutPassword } = user;
-    return new Response(JSON.stringify(userWithoutPassword), { headers: { "Content-Type": "application/json" } });
+    return new Response(JSON.stringify({ ...userWithoutPassword, ...tokens }), { headers: { "Content-Type": "application/json" } });
   }
 
   private async getUser(request: Request): Promise<Response> {
@@ -86,10 +87,8 @@ export class UserHandler {
       const user = await this.userService.create({});
       const tokens = await this.userService.generateTokens(user);
       const { password: _, ...userWithoutPassword } = user;
-      const body = JSON.stringify({ ...userWithoutPassword, ...tokens })
-      console.log('tokens', tokens)
 
-      return new Response(body, { headers: { "Content-Type": "application/json" } });
+      return new Response(JSON.stringify({ ...userWithoutPassword, ...tokens }), { headers: { "Content-Type": "application/json" } });
     }
 
     const [scheme, token] = authHeader.split(" ");

@@ -1,4 +1,4 @@
-import * as bcrypt from "https://deno.land/x/bcrypt@v0.4.1/mod.ts";
+import * as bcrypt from "bcrypt";
 import { CreateUserDto, UpdateUserDto, User } from "~/types/user.ts";
 import { JwtUtils, type JwtPayload } from "~/utils/jwt.ts";
 import { executeQuery } from "~/db/client.ts";
@@ -55,9 +55,7 @@ export class UserService {
       validatePassword(createUserDto.password);
     }
 
-    const hashedPassword = createUserDto.password
-      ? await bcrypt.hash(createUserDto.password)
-      : undefined;
+    const hashedPassword = createUserDto.password ? bcrypt.hashSync(createUserDto.password) : undefined;
 
     const users = await executeQuery<User>(
       `INSERT INTO users (name, login, email, password)
@@ -84,7 +82,7 @@ export class UserService {
       throw ErrorResponse.unauthorized()
     }
 
-    const isValid = await bcrypt.compare(loginUserDto.password, user.password);
+    const isValid = bcrypt.compareSync(loginUserDto.password, user.password);
     if (!isValid) {
       throw ErrorResponse.unauthorized("Invalid credentials");
     }
@@ -117,7 +115,7 @@ export class UserService {
     ))[0];
 
     if (user?.password) {
-      const isValid = await bcrypt.compare(updateUserDto.password, user.password);
+      const isValid = bcrypt.compareSync(updateUserDto.password, user.password);
       if (!isValid) {
         throw ErrorResponse.unauthorized("Invalid credentials");
       }
@@ -147,7 +145,7 @@ export class UserService {
 
     if (updateUserDto.newPassword) {
       updates.push(`password = $${paramCount}`);
-      values.push(await bcrypt.hash(updateUserDto.newPassword));
+      values.push(bcrypt.hashSync(updateUserDto.newPassword));
       paramCount++;
     }
 

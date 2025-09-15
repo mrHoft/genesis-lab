@@ -1,4 +1,4 @@
-import { Client } from "jsr:@db/postgres";
+import { Client } from "postgres";
 
 export async function runMigrations(client: Client) {
   await client.queryObject(`
@@ -11,7 +11,9 @@ export async function runMigrations(client: Client) {
 
 
   const migrationFiles: string[] = [];
-  for await (const dirEntry of Deno.readDir("./db/migrations")) {
+  const migrationFolder = new URL('./migrations', import.meta.url).pathname;
+  console.log('Migration folder:', migrationFolder)
+  for await (const dirEntry of Deno.readDir(migrationFolder)) {
     if (dirEntry.isFile && dirEntry.name.endsWith(".sql")) {
       migrationFiles.push(dirEntry.name);
     }

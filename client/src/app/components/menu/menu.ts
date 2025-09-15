@@ -46,28 +46,28 @@ export class Menu implements OnInit, OnDestroy {
       title: 'Log in',
       icon: './assets/login.svg',
       action: () => { this.router.navigate(['/login']) },
-      visible: () => !this.userService.user()?.login
+      visible: () => !this.userService.isAuthenticated()
     },
     {
       id: 'logout',
       title: 'Log out',
       icon: './assets/logout.svg',
       action: this.handleLogout,
-      visible: () => Boolean(this.userService.user()?.login)
+      visible: () => this.userService.isAuthenticated()
     },
     {
       id: 'profile',
       title: 'Profile',
       icon: './assets/user.svg',
       action: () => { this.router.navigate(['/profile']) },
-      visible: () => Boolean(this.userService.user())
+      visible: () => this.userService.isAuthenticated()
     },
     {
       id: 'savings',
       title: 'Savings',
       icon: './assets/gallery.svg',
       action: () => { this.router.navigate(['/savings']) },
-      visible: () => Boolean(this.userService.user())
+      visible: () => this.userService.isAuthenticated()
     },
     {
       id: '404',
