@@ -1,4 +1,4 @@
-import { Client } from "jsr:@db/postgres";
+import { Client } from "postgres";
 import { dbConfig } from "./config.ts";
 import { runMigrations } from "./migrations.ts";
 

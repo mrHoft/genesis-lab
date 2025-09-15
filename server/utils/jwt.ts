@@ -14,7 +14,7 @@ export class JwtUtils {
       .replaceAll('=', '');
   }
 
-  private static base64UrlDecode(str: string): Uint8Array {
+  private static base64UrlDecode(str: string): BufferSource {
     const padded = str
       .replaceAll('-', '+')
       .replaceAll('_', '/')
@@ -25,7 +25,7 @@ export class JwtUtils {
     for (let i = 0; i < binaryString.length; i++) {
       bytes[i] = binaryString.charCodeAt(i);
     }
-    return bytes;
+    return bytes as BufferSource;
   }
 
   static async sign(payload: JwtPayload, secret: string, expiresIn: string): Promise<string> {

@@ -1,4 +1,5 @@
-const CLIENT_DIST_PATH = `${Deno.cwd().split('/').slice(0, -1).join('/')}/client/dist`;
+const __dirname = new URL('.', import.meta.url).pathname;
+const CLIENT_DIST_PATH = `${__dirname}../../client/dist`;
 
 const MIME_TYPES: Record<string, string> = {
   ".html": "text/html",
@@ -31,6 +32,7 @@ export async function serveStatic(request: Request): Promise<Response | null> {
   const fullPath = `${CLIENT_DIST_PATH}${filePath}`;
 
   try {
+    console.log('try static:', fullPath)
     const fileInfo = await Deno.stat(fullPath);
     if (!fileInfo.isFile) {
       return null;
@@ -40,8 +42,6 @@ export async function serveStatic(request: Request): Promise<Response | null> {
 
     const extension = `.${filePath.split('.').pop()}`;
     const contentType = MIME_TYPES[extension] || "application/octet-stream";
-
-    console.log(fullPath, contentType)
 
     return new Response(fileContent, {
       status: 200,

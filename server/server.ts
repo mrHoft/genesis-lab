@@ -1,5 +1,5 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { initializeDatabase } from "./db/initialize.ts";
+import { serve } from "server";
+import { initializeDatabase } from './db/initialize.ts';
 import { middleware } from "./middleware/middleware.ts";
 import { handleRequest } from "./router/router.ts";
 
@@ -7,7 +7,7 @@ const APP_PORT = parseInt(Deno.env.get("APP_PORT") || "8000");
 
 async function main() {
   try {
-    await initializeDatabase();
+    await initializeDatabase()
 
     serve((request: Request) => middleware(request, handleRequest), {
       port: APP_PORT, onListen({ port }) {
@@ -17,7 +17,6 @@ async function main() {
 
   } catch (error) {
     console.error("Failed to start server:", error);
-    Deno.exit(1);
   }
 }
 
