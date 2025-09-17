@@ -19,10 +19,19 @@
   gap: 0.5rem;
 }
 
-canvas {
+.canvas-container {
+  max-width: 512px;
+  flex-grow: 1;
+  aspect-ratio: 1;
   border: var(--border-thickness) solid var(--color40);
   border-radius: var(--border-radius);
   box-shadow: 0 0 15px rgba(109, 213, 250, 0.4);
+}
+
+canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
 }
 
 .control_btn,

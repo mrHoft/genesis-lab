@@ -1,4 +1,4 @@
-import { Component, inject, signal, computed, HostListener } from '@angular/core';
+import { Component, inject, signal, computed, HostListener, viewChildren, ElementRef } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 
 import { GalleryService } from '~/api/gallery.service';
@@ -6,7 +6,7 @@ import type { GalleryRecord, FractalData, GalleryResponse } from '~/api/types';
 import { Loader } from '~/app/components/loader/loader';
 import { UserService } from '~/api/user.service';
 import { Fractal } from '~/app/utils/fractal';
-import { GALLERY_IMAGE_SIZE } from '~/data/const';
+import { GALLERY_IMAGE_SIZE, PAGE_SIZE } from '~/data/const';
 
 @Component({
   selector: 'app-gallery',
@@ -25,6 +25,7 @@ export class PageGallery {
   private allRecords = signal<GalleryRecord[]>([]);
   private totalRecords = signal(0);
 
+  public canvasElements = viewChildren<ElementRef<HTMLCanvasElement>>('canvas');
   public galleryRecords = computed(() => this.allRecords());
   public size = GALLERY_IMAGE_SIZE
 
@@ -39,9 +40,10 @@ export class PageGallery {
       if (response) {
         this.allRecords.update(current => [...current, ...response.records]);
         this.totalRecords.set(response.pagination.total);
-        this.currentPage.set(response.pagination.page + 1);
+        const page = response.pagination.page * Math.round(response.pagination.limit / PAGE_SIZE)
+        this.currentPage.set(page + 1);
 
-        setTimeout(() => this.renderFractals(response.records));
+        setTimeout(() => this.renderFractals(response.records, 0));
       }
     });
   }
@@ -64,12 +66,13 @@ export class PageGallery {
     this.loading.set(true);
     this.galleryService.get(this.currentPage()).subscribe({
       next: (response) => {
+        const currentLength = this.allRecords().length;
         this.allRecords.update(current => [...current, ...response.records]);
         this.totalRecords.set(response.pagination.total);
         this.currentPage.update(page => page + 1);
         this.loading.set(false);
 
-        setTimeout(() => this.renderFractals(response.records));
+        setTimeout(() => this.renderFractals(response.records, currentLength));
       },
       error: () => {
         this.loading.set(false);
@@ -77,23 +80,31 @@ export class PageGallery {
     });
   }
 
-  private renderFractals(records: GalleryRecord[]) {
-    const canvases = document.querySelectorAll('canvas');
-    records.forEach((record, index) => {
-      const canvas = canvases[canvases.length - records.length + index];
-      if (canvas) {
-        this.renderFractalToCanvas(canvas, record.props);
+  private async renderFractals(records: GalleryRecord[], startIndex: number) {
+    const canvases = this.canvasElements();
+
+    for (let i = 0; i < records.length; i++) {
+      const record = records[i];
+      const canvasRef = canvases[startIndex + i];
+
+      if (canvasRef) {
+        await this.renderFractalToCanvas(canvasRef.nativeElement, record.props);
       }
-    });
+    }
   }
 
   private renderFractalToCanvas(canvas: HTMLCanvasElement, props: FractalData) {
-    const imageData = this.fractal.render(props, this.size, this.size);
+    return new Promise<void>(resolve => {
+      requestAnimationFrame(() => {
+        const imageData = this.fractal.render(props, this.size, this.size);
 
-    const ctx = canvas.getContext('2d');
-    if (ctx) {
-      ctx.putImageData(imageData, 0, 0);
-    }
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+          ctx.putImageData(imageData, 0, 0);
+        }
+        resolve();
+      });
+    });
   }
 
   public isLiked(likes: string[]) {

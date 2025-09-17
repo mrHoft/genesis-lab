@@ -1,4 +1,4 @@
-import { Component, effect, signal, inject, afterNextRender } from '@angular/core';
+import { Component, effect, signal, inject, afterNextRender, ElementRef, viewChild, input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { createThumbnail } from '~/app/utils/thumbnail';
@@ -28,12 +28,12 @@ const defaultFractal: FractalData = {
   styleUrl: './generator.css'
 })
 export class PageGenerator {
-  readonly width = 512;
-  readonly height = 512;
+  readonly size = input(512);
+  protected width = 512;
+  protected height = 512;
   readonly max = ITERATIONS
 
-  private canvas!: HTMLCanvasElement;
-  private ctx!: CanvasRenderingContext2D;
+  private canvasElement = viewChild<ElementRef<HTMLCanvasElement>>('canvas');
 
   private timer = 0
   readonly fractalData = signal<FractalData>(defaultFractal)
@@ -57,16 +57,45 @@ export class PageGenerator {
     }
 
     afterNextRender(() => {
-      this.initializeCanvas();
+      this.setupResizeListener();
       this.renderFractal();
     });
 
     effect(() => {
       this.renderTrigger();
-      if (this.canvas) {
-        this.renderFractal();
+      this.renderFractal();
+    });
+
+    effect(() => {
+      const size = this.size()
+      this.width = size
+      this.height = size
+    });
+  }
+
+  private setupResizeListener() {
+    const resizeObserver = new ResizeObserver(entries => {
+      for (const entry of entries) {
+        this.handleResize(entry.contentRect.width);
       }
     });
+
+    const container = this.canvasElement()?.nativeElement.parentElement;
+    if (container) {
+      resizeObserver.observe(container);
+    }
+  }
+
+  private handleResize(_containerWidth: number) {
+    const scale = window.devicePixelRatio || 1;
+    const canvas = this.canvasElement()?.nativeElement;
+
+    if (canvas) {
+      const context = canvas.getContext('2d');
+      if (context) {
+        context.scale(scale, scale);
+      }
+    }
   }
 
   public zoomIn(): void {
@@ -134,10 +163,15 @@ export class PageGenerator {
   }
 
   public handleCanvasClick(event: MouseEvent): void {
-    const rect = this.canvas.getBoundingClientRect();
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
-    this.setCenter(x, y)
+    const canvas = this.canvasElement()?.nativeElement;
+    if (canvas) {
+      const rect = canvas.getBoundingClientRect();
+      const scaleX = this.width / rect.width;
+      const scaleY = this.height / rect.height;
+      const x = (event.clientX - rect.left) * scaleX;
+      const y = (event.clientY - rect.top) * scaleY;
+      this.setCenter(x, y)
+    }
   }
 
   public handleWheel(event: WheelEvent): void {
@@ -145,11 +179,16 @@ export class PageGenerator {
 
     const now = Date.now()
     if (now - this.timer > 1000) {
-      const rect = this.canvas.getBoundingClientRect();
-      const x = event.clientX - rect.left;
-      const y = event.clientY - rect.top;
-      this.setCenter(x, y)
-      this.timer = now
+      const canvas = this.canvasElement()?.nativeElement;
+      if (canvas) {
+        const rect = canvas.getBoundingClientRect();
+        const scaleX = this.width / rect.width;
+        const scaleY = this.height / rect.height;
+        const x = (event.clientX - rect.left) * scaleX;
+        const y = (event.clientY - rect.top) * scaleY;
+        this.setCenter(x, y)
+        this.timer = now
+      }
     }
 
     if (event.deltaY < 0) {
@@ -166,13 +205,14 @@ export class PageGenerator {
     this.galleryService.add({ props, thumbnail })
   }
 
-  private initializeCanvas(): void {
-    this.canvas = document.querySelector('canvas')!;
-    this.ctx = this.canvas.getContext('2d')!;
-  }
-
   private renderFractal(): void {
-    const imageData = this.fractal.render(this.fractalData(), this.width, this.height)
-    this.ctx.putImageData(imageData, 0, 0);
+    const canvas = this.canvasElement()?.nativeElement;
+    if (canvas) {
+      const context = canvas.getContext('2d');
+      if (context) {
+        const imageData = this.fractal.render(this.fractalData(), this.width, this.height)
+        context.putImageData(imageData, 0, 0);
+      }
+    }
   }
 }
