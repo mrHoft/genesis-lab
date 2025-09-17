@@ -66,6 +66,7 @@ project/
 
 ### Core focus areas
 The client part of this app based on TypeScript, Angular, and scalable web application development with latest researches and best practices.
+
 #### Quality & Integration
 RxJS was used for complex asynchronous events (e.g., API calls, websockets) due to its powerful operators for transformation and error handling. Signals are adopted for local component state and template reactivity, offering superior simplicity, automatic dependency tracking, and optimized change detection. This approach ensures  was used the right tool for the job: RxJS for events over time, and Signals for values over time.
 
@@ -78,7 +79,7 @@ RxJS was used for complex asynchronous events (e.g., API calls, websockets) due 
 | 15 | effect with clean-up (unsubscribe/teardown) that trigger a real side effect | client/src/app/components/modal/modal.service.ts:49, client/src/app/pages/generator/generator.ts:64 |
 | 0/15 | Bridge RxJS ↔ Signals: convert 3+ Observables with toSignal | |
 | 6/10 | Signal inputs (input()) in 3+ components to simplify component APIs | client/src/app/components/toggle/toggle.ts:10, client/src/app/pages/generator/generator.ts:31 |
-| 5 | Signal queries (viewChild, contentChild) | client/src/app/pages/generator/generator.ts:35 |
+| 5 | Signal queries (viewChild, contentChild) | client/src/app/pages/generator/generator.ts:35, client/src/app/pages/gallery/gallery.ts:28 |
 | 0/10 | Use untracked() or a custom equality to avoid extra updates | |
 | **1-b. Quality & Integration** |||
 | 6 | No reactive loops / leaks | effects don’t re-trigger themselves |

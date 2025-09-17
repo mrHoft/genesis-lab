@@ -2,6 +2,7 @@
   @for (item of galleryRecords(); track item.id) {
   <div class="item-container">
     <div class="item" (click)="router.navigate([`/generator/${item.id}`])">
+      <img class="thumbnail" [width]="size" [height]="size" [src]="item.thumbnail" alt="thumbnail" />
       <canvas [width]="size" [height]="size" #canvas></canvas>
       <div class="index">#{{item.id}}</div>
       <div class="likes" (click)="$event.stopPropagation();handleLike(item.id)">
