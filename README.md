@@ -72,76 +72,76 @@ RxJS was used for complex asynchronous events (e.g., API calls, websockets) due 
 ### Self-assessment table
 | Points | Item | Evidence |
 | ---- | ---- | ---- |
-| Signals & Reactivity |
-| 20 | Single source of truth with signals for one major feature | client/src/app/pages/gallery/gallery.ts:25 |
-| | | client/src/app/pages/generator/generator.ts:39 |
-| 15 | computed values that are used in templates or logic for that feature | client/src/api/user.service.ts:19 |
-| | | client/src/app/components/loader/loader.ts:37 |
-| | | client/src/app/pages/savings/savings.ts:26 |
-| 15 | effect with clean-up (unsubscribe/teardown) that trigger a real side effect | client/src/app/components/modal/modal.service.ts:49 |
-| | | client/src/app/pages/generator/generator.ts:64 |
+| **1. Signals & Reactivity** |||
+| 20 | Single source of truth with signals for one major feature | client/src/app/pages/gallery/gallery.ts:25, client/src/app/pages/generator/generator.ts:39 |
+| 15 | computed values that are used in templates or logic for that feature | client/src/api/user.service.ts:19, client/src/app/components/loader/loader.ts:37, client/src/app/pages/savings/savings.ts:26 |
+| 15 | effect with clean-up (unsubscribe/teardown) that trigger a real side effect | client/src/app/components/modal/modal.service.ts:49, client/src/app/pages/generator/generator.ts:64 |
 | 0/15 | Bridge RxJS ↔ Signals: convert 3+ Observables with toSignal | |
-| 3/10 | Signal inputs (input()) in 3+ components to simplify component APIs | client/src/app/components/toggle/toggle.ts:10 |
-| 0/5 | Signal queries (viewChild, contentChild) | |
+| 6/10 | Signal inputs (input()) in 3+ components to simplify component APIs | client/src/app/components/toggle/toggle.ts:10, client/src/app/pages/generator/generator.ts:31 |
+| 5 | Signal queries (viewChild, contentChild) | client/src/app/pages/generator/generator.ts:35 |
 | 0/10 | Use untracked() or a custom equality to avoid extra updates | |
-| Quality & Integration |
+| **1-b. Quality & Integration** |||
 | 6 | No reactive loops / leaks | effects don’t re-trigger themselves |
 | 6 | Useful computed | each computed replaces heavy template logic |
 | 6 | Clear boundaries | no duplicate state (Signal + Subject) without a reason |
 | 0/6 | Performance awareness | >> profiler screenshot << |
 | 0/6 | Tested behavior | |
 | 6 | Short rationale | [readme](https://github.com/mrHoft/genesis-lab/blob/main/README.md#quality--integration) |
-| Routing & Navigation |
+| **2. Routing & Navigation** |||
 | 25 | Functional routes with lazy loadComponent | client/src/app/app.routes.ts |
 | 20 | Guards/resolvers with typed data | client/src/app/app.routes.ts |
 | 0/15 | withComponentInputBinding() | |
 | 20 | Data prefetch or custom preloading strategy | client/src/app/pages/gallery/gallery.resolver.ts |
 | 10 | Error route and 404 page, safe redirects | client/src/app/app.routes.ts |
 | 0/20 | Deep linking | |
-| Testing – up |
+| **3. Testing – up** |||
 | 0/50 | Unit tests | |
 | 0/50 | E2E tests| |
 | 0/20 | Mock HTTP, test interceptors and error states | |
 | 0/10 | Use a component testing library/harness | |
-| TypeScript & Typing |
+| **4. TypeScript & Typing** |||
 | 20 | strict: true | client/tsconfig.json |
 | 15 | Good domain models with generics and type guards | client/src/api/storage.ts:24 |
-| 5 | utility types (Pick, Partial, Omit) | client/src/api/user.service.ts:39 |
-| | | client/src/api/gallery.service.ts:16 |
-| Architecture & Components |
+| 5 | utility types (Pick, Partial, Omit) | client/src/api/user.service.ts:39, client/src/api/gallery.service.ts:16 |
+| **5. Architecture & Components** |||
 | 0/30 | Feature-sliced structure | |
 | 20 | Reusable components | client/src/app/components |
 | 0/20 | Useful attribute or structural directives | |
 | 0/10 | DI patterns: injection tokens for config, clean boundaries | |
 | 0/10 | Well-designed pure pipes with strong typing |
-| HTTP & Data |
+| **6. HTTP & Data** |||
 | 0/25 | Typed HttpClient layer, interceptors | |
 | 20 | Consistent error handling with user-friendly messages | client/src/api/message.ts |
 | 0/20 | Cancel in-flight requests on navigation | |
 | 0/15 | Local cache with invalidation | |
-| Reactive Forms |
+| **7. Reactive Forms** |||
 | 40 | Complex form with custom validators | client/src/app/pages/profile/profile.ts |
-| 0/15 | Responsive layout (BreakpointObserver or modern CSS) | |
+| 0/15 | Dynamic fields with FormArray | |
+| 0/15 | Save draft and restore form state | |
+| 0/10 | Keyboard access, labels, aria-describedby for errors | |
+| **8. UI, Styling & Theming** |||
+| 0/25 | Design tokens with CSS custom properties, theme switch (dark/light) saved to storage | |
+| 15 | Responsive layout (BreakpointObserver or modern CSS) | client/src/app/pages/generator/generator.ts:76 |
 | 0/10 | Angular animations | |
 | 20 | Good empty/loading/error states | client/src/app/components/loader |
-| Content & Templates|
+| **9. Content & Templates** |||
 | 0/20 | Content projection with selectors, meaningful slots | |
 | 20 | ngTemplateOutlet, ng-container, new control flow to simplify DOM | client/src/app/components/modal/modal.html:10 |
-| Performance |
+| **10. Performance** |||
 | 20 | Code-splitting and lazy loading for heavy parts | Generator uses splitted parts, such as palettes and fractal |
 | 20 | Image lazy loading and virtual scroll for large lists | infinite scroll is used at Gallery page |
 | 0/20 | Performance budget in README + measured Lighthouse gains | |
-| Backend & Data Persistence|
+| **11. Backend & Data Persistence**|||
 | 40 | own backend with docs | [readme](https://github.com/mrHoft/genesis-lab/blob/main/doc.md) |
 | 20 | Auth with JWT/OAuth2, protected routes | server/router/user.ts:81 |
 | 0/20 | Realtime features (WebSocket or Firestore realtime) | |
-| Accessibility |
+| **12. Accessibility** |||
 | 0/20 | Keyboard navigation and focus management | |
 | 0/20 | Proper semantics and ARIA for forms, dialogs, menus | |
-| DevOps, CI & Docs |
-| 0/20 | CI pipeline: lint + unit tests + build + preview | |
+| **13. DevOps, CI & Docs** |||
+| 20 | CI pipeline: lint + unit tests + build + preview | .github/workflows/deploy.yml |
 | 20 | Clear README with run steps, env variables, architecture diagram | [readme](https://github.com/mrHoft/genesis-lab/blob/main/README.md) |
 | 10 | Release notes/changelog and issue templates | presents |
-| 0/10 | Error monitoring (for example, Sentry) or remote logging | |
-| Internationalization |
+| 10 | Error monitoring (for example, Sentry) or remote logging | [deno deploy logs](https://dash.deno.com/projects/genesis-lab/logs) |
+| **14. Internationalization** |||
 | 0/20 | Two languages using Angular i18n or ngx-translate | |

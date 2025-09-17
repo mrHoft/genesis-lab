@@ -1,5 +1,7 @@
-<canvas #canvas [width]="width" [height]="height" (click)="handleCanvasClick($event)"
-  (wheel)="handleWheel($event)"></canvas>
+<div class="canvas-container">
+  <canvas #canvas [width]="width" [height]="height" (click)="handleCanvasClick($event)"
+    (wheel)="handleWheel($event)"></canvas>
+</div>
 
 <div class="controls">
   @let data=fractalData();
