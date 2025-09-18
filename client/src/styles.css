@@ -38,6 +38,22 @@
   }
 }
 
+:root.theme-light {
+  --color-scheme: 1;
+  --color00: #fef7f3;
+  --color10: #e0d4cb;
+  --color20: #cbbeb4;
+  --color20a: #cbbeb488;
+  --color30: #b1a59e;
+  --color40: #988d87;
+  --color50: #7f7671;
+  --color60: #655e5a;
+  --color70: #4c4643;
+  --color80: #322f2d;
+  --color90: #191716;
+  --color100: #161311;
+}
+
 :root {
   --font-family: system-ui, Helvetica, Arial, sans-serif;
   font-family: var(--font-family);
