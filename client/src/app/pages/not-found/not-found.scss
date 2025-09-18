@@ -1,0 +1,17 @@
+:host {
+  min-height: calc(100dvh - 6rem);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.content {
+  width: 16rem;
+  padding: 1rem;
+  text-align: center;
+}
+
+.content h3 {
+  text-align: center;
+  margin-top: 0;
+}

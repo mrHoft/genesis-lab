@@ -1,0 +1,18 @@
+<header class="header">
+  <a class="title" [routerLink]="'/'">
+    <img class="logo" src="./assets/mandelbrot.png" alt="logo" />
+    <h3>Genesis lab</h3>
+  </a>
+  <div>
+    @for(tab of tabs; track tab.id){
+    <a [routerLink]="`/${tab.link}`" class="tab" [class.active]="tab.link==currentRoute">
+      <img [src]="tab.icon" [alt]="tab.id" />
+      <span>{{tab.title}}</span>
+    </a>
+    }
+  </div>
+  <div class="right">
+    <app-theme />
+    <app-menu />
+  </div>
+</header>

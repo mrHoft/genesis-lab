@@ -1,0 +1,22 @@
+<div class="gallery-container">
+  @for (item of galleryRecords(); track item.id) {
+  <div class="item-container">
+    <div class="item" (click)="router.navigate([`/generator/${item.id}`])">
+      <img class="thumbnail" [width]="size" [height]="size" [src]="item.thumbnail" alt="thumbnail" />
+      <canvas class="canvas" [width]="size" [height]="size" #canvas></canvas>
+      <div class="index">#{{item.id}}</div>
+      <div class="likes" (click)="$event.stopPropagation();handleLike(item.id)">
+        <div>{{item.likes.length}}</div>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
+          stroke="currentColor">
+          <path [attr.fill]="isLiked(item.likes) ? 'currentColor' : 'none'"
+            d="m12,22c-3.92-3.74-8.46-6.96-10.49-11.55C-1.22,3.94,7.65-1.13,12,4.29c4.35-5.41,13.22-.35,10.49,6.16-2.03,4.59-6.56,7.82-10.49,11.55Z" />
+        </svg>
+      </div>
+    </div>
+  </div>
+  }
+  @if (loading()) {
+  <div class="loading"><app-loader /></div>
+  }
+</div>

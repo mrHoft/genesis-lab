@@ -3,25 +3,21 @@
   "version": "0.0.1",
   "description": "Genesis lab",
   "homepage": "https://github.com/mrHoft/genesis-lab#readme",
-  "bugs": {
-    "url": "https://github.com/mrHoft/genesis-lab/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/mrHoft/genesis-lab.git"
-  },
   "license": "ISC",
-  "author": "mrHoft",
   "private": true,
-  "scripts": {
+  "exports": "./server/server.ts",
+  "exclude": [
+    "client"
+  ],
+  "tasks": {
     "client": "cd client && npm start",
     "server": "cd server && deno task dev",
     "build": "cd client && npm run build",
     "start": "cd server && deno task start",
-    "lint": "npm run lint --workspaces",
+    "lint": "deno lint client server",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "workspaces": [
+  "workspace": [
     "client",
     "server"
   ]

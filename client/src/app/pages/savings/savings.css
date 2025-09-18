@@ -1,0 +1,38 @@
+:host {
+  min-height: calc(100dvh - 6rem);
+}
+
+.title {
+  text-align: center;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.25rem 0.5rem;
+  transition: background-color 0.25s linear;
+  cursor: default;
+
+  &:hover {
+    background-color: var(--color-accent60a);
+  }
+}
+
+.likes {
+  display: flex;
+  align-items: center;
+  column-gap: 0.5rem;
+}
+
+.trash {
+  padding: 4px;
+  border-radius: var(--border-radius);
+  background-color: var(--color20);
+  transition: background-color 0.25s linear;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--color-accent50);
+  }
+}

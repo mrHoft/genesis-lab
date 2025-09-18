@@ -1,0 +1,27 @@
+.footer {
+  height: 2.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 1rem;
+  box-sizing: border-box;
+  color: var(--color100);
+}
+
+.logo {
+  box-sizing: border-box;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  border: var(--border-thickness) solid var(--color30);
+  transition: border-color 0.25s linear, background-color 0.25s linear;
+
+  &:hover {
+    border-color: var(--color-accent60);
+    background-color: var(--color-accent50a);
+  }
+}
+
+.github {
+  filter: invert(var(--color-scheme));
+}
