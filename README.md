@@ -47,7 +47,7 @@ project/
 │   ├── services/        # Endpoint logic
 │   └── server.ts        # Entry point
 └── client/
-    ├── src/             # Source files
+    ├── src/
     │   ├── api/         # Api services
     │   └── app/         # Angular application
     └── dist/            # Bundled static files (used by server)
@@ -57,18 +57,20 @@ project/
 1. Clone project
 2. Install Deno (https://deno.com/)
 2. Install dependencies (`npm install`)
-3. Define server environment (`cp server/.env.example server/.env`)
-4. Install Postgres if not exist (depend of your system)
-5. Define DB_HOST and DB_PORT depend of your database
-6. Build client static files (`npm run client:build`)
-7. Start server (`deno task server`)
-8. Application will be available on http://localhost:3000 (by default)
+3. Install Postgres if not exist (depend of your system)
+4. Define DB_HOST and DB_PORT depend of your database (`server/.env.dev`)
+5. Build client static files (`npm run client:build`)
+6. Start server (`deno task server`)
+7. Application will be available on http://localhost:3004 (by default)
 
 ### Core focus areas
 The client part of this app based on TypeScript, Angular, and scalable web application development with latest researches and best practices.
 
 #### Quality & Integration
 RxJS was used for complex asynchronous events (e.g., API calls, websockets) due to its powerful operators for transformation and error handling. Signals are adopted for local component state and template reactivity, offering superior simplicity, automatic dependency tracking, and optimized change detection. This approach ensures  was used the right tool for the job: RxJS for events over time, and Signals for values over time.
+
+#### Performance
+![performance](/docs/images/lighthouse.png)
 
 ### Self-assessment table
 | Points | Item | Evidence |
@@ -85,9 +87,9 @@ RxJS was used for complex asynchronous events (e.g., API calls, websockets) due 
 | 6 | No reactive loops / leaks | effects don’t re-trigger themselves |
 | 6 | Useful computed | each computed replaces heavy template logic |
 | 6 | Clear boundaries | no duplicate state (Signal + Subject) without a reason |
-| 0/6 | Performance awareness | >> profiler screenshot << |
+| 6 | Performance awareness | [performance](https://github.com/mrHoft/genesis-lab/blob/develop/README.md#performance) |
 | 0/6 | Tested behavior | |
-| 6 | Short rationale | [readme](https://github.com/mrHoft/genesis-lab/blob/main/README.md#quality--integration) |
+| 6 | Short rationale | [integration](https://github.com/mrHoft/genesis-lab/blob/develop/README.md#quality--integration) |
 | **2. Routing & Navigation** |||
 | 25 | Functional routes with lazy loadComponent | client/src/app/app.routes.ts |
 | 20 | Guards/resolvers with typed data | client/src/app/app.routes.ts |
@@ -121,7 +123,7 @@ RxJS was used for complex asynchronous events (e.g., API calls, websockets) due 
 | 0/15 | Save draft and restore form state | |
 | 0/10 | Keyboard access, labels, aria-describedby for errors | |
 | **8. UI, Styling & Theming** |||
-| 0/25 | Design tokens with CSS custom properties, theme switch (dark/light) saved to storage | |
+| 25 | Design tokens with CSS custom properties, theme switch (dark/light) saved to storage | client/src/app/components/theme/theme.ts |
 | 15 | Responsive layout (BreakpointObserver or modern CSS) | client/src/app/pages/generator/generator.ts:76 |
 | 0/10 | Angular animations | |
 | 20 | Good empty/loading/error states | client/src/app/components/loader |
@@ -131,9 +133,9 @@ RxJS was used for complex asynchronous events (e.g., API calls, websockets) due 
 | **10. Performance** |||
 | 20 | Code-splitting and lazy loading for heavy parts | Generator uses splitted parts, such as palettes and fractal |
 | 20 | Image lazy loading and virtual scroll for large lists | infinite scroll is used at Gallery page |
-| 0/20 | Performance budget in README + measured Lighthouse gains | |
+| 20 | Performance budget in README + measured Lighthouse gains | [performance](https://github.com/mrHoft/genesis-lab/blob/develop/README.md#performance) |
 | **11. Backend & Data Persistence**|||
-| 40 | own backend with docs | [readme](https://github.com/mrHoft/genesis-lab/blob/main/doc.md) |
+| 40 | own backend with docs | [server docs](https://github.com/mrHoft/genesis-lab/blob/develop/doc.md) |
 | 20 | Auth with JWT/OAuth2, protected routes | server/router/user.ts:81 |
 | 0/20 | Realtime features (WebSocket or Firestore realtime) | |
 | **12. Accessibility** |||
@@ -141,7 +143,7 @@ RxJS was used for complex asynchronous events (e.g., API calls, websockets) due 
 | 0/20 | Proper semantics and ARIA for forms, dialogs, menus | |
 | **13. DevOps, CI & Docs** |||
 | 20 | CI pipeline: lint + unit tests + build + preview | .github/workflows/deploy.yml |
-| 20 | Clear README with run steps, env variables, architecture diagram | [readme](https://github.com/mrHoft/genesis-lab/blob/main/README.md) |
+| 20 | Clear README with run steps, env variables, architecture diagram | [readme](https://github.com/mrHoft/genesis-lab/blob/develop/README.md) |
 | 10 | Release notes/changelog and issue templates | presents |
 | 10 | Error monitoring (for example, Sentry) or remote logging | [deno deploy logs](https://dash.deno.com/projects/genesis-lab/logs) |
 | **14. Internationalization** |||

@@ -14,6 +14,7 @@ export default tseslint.config([
       "@typescript-eslint/no-unused-vars": ['error', { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }],
       'unicorn/empty-brace-spaces': 'off',
       'unicorn/prevent-abbreviations': 'off',
+      'unicorn/no-for-loop': 'off',
       'unicorn/no-array-for-each': 'off',
       'unicorn/no-array-reduce': 'off',
       'unicorn/prefer-top-level-await': 'off',

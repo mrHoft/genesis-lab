@@ -1,6 +1,6 @@
 {
   "tasks": {
-    "dev": "DEV_MODE=true deno run --allow-env --env-file=.env --allow-net --allow-read --watch server.ts",
+    "dev": "DEV_MODE=true deno run --allow-env --env-file=.env.dev --allow-net --allow-read --watch server.ts",
     "start": "deno run --allow-env --env-file=.env --allow-net --allow-read server.ts"
   },
   "imports": {

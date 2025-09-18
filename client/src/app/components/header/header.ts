@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { Router, RouterLink, NavigationEnd } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Menu } from '~/app/components/menu/menu';
+import { Theme } from '~/app/components/theme/theme';
 
 interface TabData {
   id: string,
@@ -12,7 +13,7 @@ interface TabData {
 
 @Component({
   selector: 'app-header',
-  imports: [RouterLink, Menu],
+  imports: [RouterLink, Menu, Theme],
   templateUrl: './header.html',
   styleUrl: './header.css'
 })

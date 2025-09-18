@@ -4,7 +4,7 @@ import { Component, input, output } from '@angular/core';
   selector: 'app-toggle',
   imports: [],
   templateUrl: './toggle.html',
-  styleUrl: './toggle.scss'
+  styleUrl: './toggle.css'
 })
 export class Toggle {
   public checked = input.required<boolean>()
