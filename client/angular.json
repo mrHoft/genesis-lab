@@ -76,7 +76,7 @@
           "builder": "@angular/build:extract-i18n"
         },
         "test": {
-          "builder": "@angular/build:karma",
+          "builder": "@angular-devkit/build-angular:karma",
           "options": {
             "tsConfig": "tsconfig.spec.json",
             "assets": [
@@ -87,7 +87,19 @@
             ],
             "styles": [
               "src/styles.css"
-            ]
+            ],
+            "codeCoverage": true,
+            "watch": false,
+            "browsers": [
+              "ChromeHeadless"
+            ],
+            "reporters": [
+              "progress",
+              "coverage"
+            ],
+            "coverageReporter": {
+              "type": "text-summary"
+            }
           }
         }
       }

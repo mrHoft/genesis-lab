@@ -4,7 +4,7 @@ import { MessageService } from './message.service';
 @Component({
   selector: 'app-message',
   templateUrl: './message.html',
-  styleUrl: './message.scss'
+  styleUrl: './message.css'
 })
 export class MessageComponent {
   private readonly messageService = inject(MessageService);

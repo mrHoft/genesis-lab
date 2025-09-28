@@ -4,7 +4,7 @@ import { ModalService } from './modal.service';
 @Component({
   selector: 'app-modal',
   templateUrl: './modal.html',
-  styleUrl: './modal.scss',
+  styleUrl: './modal.css',
 })
 export class ModalComponent implements OnInit, OnDestroy {
   private modalService = inject(ModalService);

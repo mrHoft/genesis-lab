@@ -1,16 +1,19 @@
 import { Component } from '@angular/core';
-import packageJson from '~/../package.json' with { type: 'json' };
 
 @Component({
   selector: 'app-footer',
   imports: [],
   templateUrl: './footer.html',
-  styleUrl: './footer.scss'
+  styleUrl: './footer.css'
 })
 export class Footer {
-  protected version: string
+  public version = '0.0.1'
 
   constructor() {
-    this.version = packageJson.version
+    import('~/../package.json').then(pkg => {
+      this.version = pkg.version;
+    }).catch(() => {
+      console.warn('Failed to load package.json, using default version');
+    })
   }
 }
