@@ -59,9 +59,18 @@ project/
 2. Install dependencies (`npm install`)
 3. Install Postgres if not exist (depend of your system)
 4. Define DB_HOST and DB_PORT depend of your database (`server/.env.dev`)
-5. Build client static files (`npm run client:build`)
+5. Build client static files (`npm run build`)
 6. Start server (`deno task server`)
 7. Application will be available on http://localhost:3004 (by default)
+
+### Commands:
+| Command | Description |
+| ---- | ---- |
+| npm run test | Client components tests |
+| npm run lint | Client eslint checks |
+| npm run client | Execute client app |
+| npm run server | Execute server app |
+| npm run build && npm start | Start server |
 
 ### Core focus areas
 The client part of this app based on TypeScript, Angular, and scalable web application development with latest researches and best practices.
@@ -93,12 +102,12 @@ RxJS was used for complex asynchronous events (e.g., API calls, websockets) due 
 | **2. Routing & Navigation** |||
 | 25 | Functional routes with lazy loadComponent | client/src/app/app.routes.ts |
 | 20 | Guards/resolvers with typed data | client/src/app/app.routes.ts |
-| 0/15 | withComponentInputBinding() | |
+| 15 | withComponentInputBinding() | client/src/app/app.config.ts:11 |
 | 20 | Data prefetch or custom preloading strategy | client/src/app/pages/gallery/gallery.resolver.ts |
 | 10 | Error route and 404 page, safe redirects | client/src/app/app.routes.ts |
 | 0/20 | Deep linking | |
 | **3. Testing – up** |||
-| 0/50 | Unit tests | |
+| 50/50 | Unit tests | client/src/app/components/**/*.spec.ts |
 | 0/50 | E2E tests| |
 | 0/20 | Mock HTTP, test interceptors and error states | |
 | 0/10 | Use a component testing library/harness | |

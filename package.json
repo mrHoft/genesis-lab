@@ -18,8 +18,8 @@
     "server": "cd server && deno task dev",
     "build": "cd client && npm run build",
     "start": "cd server && deno task start",
-    "lint": "npm run lint --workspaces",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "cd client && npm run lint",
+    "test": "cd client && npm run test"
   },
   "workspaces": [
     "client",

@@ -32,11 +32,11 @@ export class Confirmation {
   public message = '';
   public result = output<TConfirmationResult>()
 
-  protected onYes() {
+  public onYes() {
     this.result.emit(true);
   }
 
-  protected onCancel() {
+  public onCancel() {
     this.result.emit(false);
   }
 }

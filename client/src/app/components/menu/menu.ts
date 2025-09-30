@@ -29,11 +29,11 @@ export class Menu implements OnInit, OnDestroy {
     document.removeEventListener('click', this.clickListener)
   }
 
-  protected handleMenu = () => {
+  public handleMenu = () => {
     this.menuOpen.update(cur => !cur)
   }
 
-  protected handleLogout = () => {
+  public handleLogout = () => {
     this.userService.logout()
     this.router.navigate(['/login'])
   }
