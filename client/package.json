@@ -7,7 +7,10 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "lint": "npx eslint .",
-    "test": "jest src/app/components"
+    "test": "jest src/app/components",
+    "e2e": "playwright test",
+    "e2e:ui": "playwright test --ui",
+    "e2e:headed": "playwright test --headed"
   },
   "prettier": {
     "overrides": [
@@ -36,7 +39,9 @@
     "@angular/cli": "^20.1.0",
     "@angular/compiler-cli": "^20.1.0",
     "@eslint/js": "^9.31.0",
+    "@playwright/test": "^1.55.1",
     "@types/jest": "^30.0.0",
+    "@types/node": "^24.6.0",
     "eslint": "^9.31.0",
     "eslint-plugin-unicorn": "^59.0.1",
     "jest": "^30.2.0",

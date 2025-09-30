@@ -19,7 +19,8 @@
     "build": "cd client && npm run build",
     "start": "cd server && deno task start",
     "lint": "cd client && npm run lint",
-    "test": "cd client && npm run test"
+    "test": "cd client && npm run test",
+    "e2e": "cd client && npm run e2e"
   },
   "workspaces": [
     "client",

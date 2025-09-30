@@ -107,8 +107,8 @@ RxJS was used for complex asynchronous events (e.g., API calls, websockets) due 
 | 10 | Error route and 404 page, safe redirects | client/src/app/app.routes.ts |
 | 0/20 | Deep linking | |
 | **3. Testing – up** |||
-| 50/50 | Unit tests | client/src/app/components/**/*.spec.ts |
-| 0/50 | E2E tests| |
+| 50 | Unit tests | client/src/app/components/**/*.spec.ts |
+| 50 | E2E tests| client/e2e-tests/*.spec.ts |
 | 0/20 | Mock HTTP, test interceptors and error states | |
 | 0/10 | Use a component testing library/harness | |
 | **4. TypeScript & Typing** |||
@@ -144,7 +144,7 @@ RxJS was used for complex asynchronous events (e.g., API calls, websockets) due 
 | 20 | Image lazy loading and virtual scroll for large lists | infinite scroll is used at Gallery page |
 | 20 | Performance budget in README + measured Lighthouse gains | [performance](https://github.com/mrHoft/genesis-lab/blob/develop/README.md#performance) |
 | **11. Backend & Data Persistence**|||
-| 40 | own backend with docs | [server docs](https://github.com/mrHoft/genesis-lab/blob/develop/doc.md) |
+| 40 | Own backend with docs | [server docs](https://github.com/mrHoft/genesis-lab/blob/develop/server/doc.md) |
 | 20 | Auth with JWT/OAuth2, protected routes | server/router/user.ts:81 |
 | 0/20 | Realtime features (WebSocket or Firestore realtime) | |
 | **12. Accessibility** |||
