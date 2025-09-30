@@ -1,0 +1,10 @@
+<div class="messages">
+  @for (message of displayedMessages(); track message.id) {
+  <div class="messages__item" [class.hidden]="message.hidden">
+    <div class="messages__item_icon" [style.background-color]="message.mode === 'error' ? 'gray' : null">
+      {{ message.mode === 'error' ? '\u274C' : '\u2714' }}
+    </div>
+    {{ message.content }}
+  </div>
+  }
+</div>

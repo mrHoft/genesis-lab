@@ -1,0 +1,8 @@
+:host {
+  margin: 1rem;
+  min-height: calc(100dvh - 8rem);
+}
+
+.center {
+  text-align: center;
+}

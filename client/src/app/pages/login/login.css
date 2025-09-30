@@ -1,0 +1,47 @@
+:host {
+  width: 100%;
+  height: calc(100dvh - 6rem);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login {
+  width: 16rem;
+  background-color: var(--color10);
+  border-radius: 0.5rem;
+  border: var(--border-thickness) solid var(--color30);
+}
+
+.login__form {
+  display: flex;
+  flex-direction: column;
+  row-gap: 1rem;
+  padding: 1rem 2rem;
+
+  input,
+  button {
+    font-size: 1rem;
+  }
+}
+
+.title {
+  text-align: center;
+  margin-top: 0;
+}
+
+.form_btns {
+  display: flex;
+  justify-content: center;
+}
+
+.form_error {
+  font-size: smaller;
+  color: red;
+  height: 1lh;
+}
+
+.sign {
+  text-align: center;
+  cursor: pointer;
+}
