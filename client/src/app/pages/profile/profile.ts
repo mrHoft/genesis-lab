@@ -2,7 +2,6 @@ import { Component, inject, signal } from '@angular/core';
 import { ReactiveFormsModule, FormControl, FormGroup, Validators } from '@angular/forms';
 import { passwordValidator } from '~/app/utils/validation/password';
 import { UserService } from '~/api/user.service';
-// import { Router } from '@angular/router';
 import { i18n } from '~/data/i18n.en';
 
 @Component({
@@ -12,7 +11,6 @@ import { i18n } from '~/data/i18n.en';
   styleUrl: './profile.css'
 })
 export class PageProfile {
-  // private router = inject(Router);
   private userService = inject(UserService);
   protected form: FormGroup
   protected errorMessage = signal<string | null>(null);
